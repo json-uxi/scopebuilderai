@@ -19,7 +19,7 @@
 
         /* Header - Modern Gradient Logo & Toggle */
         header { 
-            text-align: center; padding: 40px 20px; 
+            text-align: center; padding: 32px 20px; /* Adjusted for logo */
             background: white; border-radius: 24px; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.08); margin-bottom: 40px; 
             position: relative; overflow: hidden; 
@@ -28,16 +28,51 @@
             content: ''; position: absolute; top: 0; left: 0; right: 0; 
             height: 6px; background: linear-gradient(90deg, #4299e1, #3182ce, #2b6cb0, #2c5282); 
         }
-        h1 { 
-            font-size: 3.2em; font-weight: 800; 
-            background: linear-gradient(135deg, #4299e1, #3182ce); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            background-clip: text; margin-bottom: 12px; letter-spacing: -0.02em; 
+
+        /* Logo Styling */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 16px;
         }
+        .logo {
+            max-width: 280px;  /* Adjust this: larger=350px for bold, smaller=220px for subtle */
+            height: auto;      /* Keeps proportions perfect */
+            width: 100%;       /* Responsive scaling */
+            max-height: 120px; /* Prevents it from being too tall */
+            border-radius: 8px; /* Optional: subtle rounded corners */
+            box-shadow: 0 4px 20px rgba(66, 153, 225, 0.15); /* Matches your blue theme */
+            transition: transform 0.3s ease; /* Smooth hover effect */
+        }
+        .logo:hover {
+            transform: scale(1.02); /* Slight zoom on hover */
+        }
+
+        /* Responsive Logo Sizes */
+        @media (max-width: 768px) {
+            .logo {
+                max-width: 220px;  /* Smaller on mobile */
+                max-height: 80px;
+            }
+        }
+        @media (max-width: 480px) {
+            .logo {
+                max-width: 180px;  /* Even smaller on small phones */
+                max-height: 60px;
+            }
+            .logo-container {
+                margin-bottom: 12px;
+            }
+        }
+
         .tagline { 
-            color: #718096; font-size: 1.3em; font-weight: 400; 
-            margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto; 
+            color: #718096; font-size: 1.1em; /* Slightly smaller with logo */
+            font-weight: 400; 
+            margin-bottom: 20px; max-width: 600px; margin-left: auto; margin-right: auto; 
+            padding: 0 20px;   /* Prevent overflow on mobile */
         }
+
         #langToggle { 
             appearance: none; -webkit-appearance: none; 
             padding: 12px 24px; border: 2px solid #e2e8f0; border-radius: 50px; 
@@ -319,7 +354,6 @@
         /* Responsive Design */
         @media (max-width: 768px) { 
             body { padding: 12px; } 
-            h1 { font-size: 2.4em; } 
             .form-card, .preview-card, .export-section, footer { 
                 padding: 24px; margin: 16px 0; border-radius: 16px; 
             } 
@@ -331,7 +365,6 @@
         @media (max-width: 480px) { 
             .container { padding: 0 12px; } 
             .form-card { padding: 20px; } 
-            h1 { font-size: 2em; } 
             .tagline { font-size: 1.1em; }
         }
 
@@ -347,7 +380,9 @@
     <div class="container">
         <!-- Header Section -->
         <header class="fade-in">
-            <h1>ScopeBuilderAI</h1>
+            <div class="logo-container">
+                <img src="logo.png" alt="ScopeBuilderAI Logo" class="logo" loading="lazy">
+            </div>
             <p class="tagline">Generate Professional Proposals in Minutes for Web Development & Content Writing</p>
             <select id="langToggle" class="fade-in">
                 <option value="en">🇺🇸 English</option>
@@ -478,7 +513,7 @@
                 milestonesTitle: 'Project Milestones & Timeline',
                 pricingTitle: 'Investment Options',
                 nextStepsTitle: 'Next Steps',
-                nextStepsText: 'This proposal is customized based on your requirements. We\'re excited to partner with you on this project and deliver exceptional results.',
+                nextStepsText: "This proposal is customized based on your requirements. We're excited to partner with you on this project and deliver exceptional results.",
                 contactTitle: 'Contact Information',
                 contactText: 'Your Name | your.email@domain.com | +1 (555) 123-4567',
                 closing: 'Best regards,',
@@ -1097,7 +1132,7 @@
                                 <p style="color: #718096; font-size: 14px;">
                                     Monday - Friday: 9 AM - 6 PM EST<br>
                                     Emergency support available 24/7<br>
-                                    Response time: &lt; 2 hours during business hours
+                                    Response time: < 2 hours during business hours
                                 </p>
                             </div>
                         </div>
@@ -1143,7 +1178,7 @@
                 // Re-generate proposal if one exists
                 if (this.generatedProposal) {
                     this.previewContent.innerHTML = this.generatedProposal.replace(
-                        /<h[1-6][^>]*>(.*?)<\/h[1-6]>/g, 
+                        /<h[1-6][^>]*>(.*?)</h[1-6]>/g, 
                         (match, content) => match.replace(content, translations[lang].title || content)
                     );
                     this.previewTitle.textContent = translations[lang].title;
