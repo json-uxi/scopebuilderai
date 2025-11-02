@@ -358,4 +358,241 @@
       </p>
     </footer>
   </div> <!-- end .container -->
+  <script>
+    // Smooth Splash Fade-Out and Reveal
+    (function () {
+      const splash = document.getElementById('splash');
+      // If splash exists, hide it on load; else no-op
+      window.addEventListener('load', () => {
+        if (!splash) return;
+        // small delay feels premium
+        setTimeout(() => splash.classList.add('hide'), 350);
+        // remove from DOM to avoid focus traps
+        setTimeout(() => splash.remove(), 1000);
+      });
+
+      // Fallback: ensure splash never sticks
+      setTimeout(() => {
+        if (splash && !splash.classList.contains('hide')) {
+          splash.classList.add('hide');
+          setTimeout(() => splash.remove(), 700);
+        }
+      }, 6000);
+    })();
+
+    // Translations (UI strings only for demo)
+    const translations = {
+      en: {
+        formTitle: 'Create New Proposal',
+        statusReady: 'Ready to Review',
+        exportQ: 'Ready to Share Your Proposal?',
+        copy: 'Copy to Clipboard (Google Docs)',
+        pdf: 'Download PDF (Client Ready)',
+      },
+      hi: {
+        formTitle: 'नया प्रस्ताव बनाएं',
+        statusReady: 'समीक्षा के लिए तैयार',
+        exportQ: 'क्या आपका प्रस्ताव साझा करने के लिए तैयार है?',
+        copy: 'क्लिपबोर्ड में कॉपी करें (Google Docs)',
+        pdf: 'PDF डाउनलोड करें (ग्राहक हेतु तैयार)',
+      }
+    };
+
+    const langToggle = document.getElementById('langToggle');
+    function applyLang(lang) {
+      const t = translations[lang] || translations.en;
+      const formTitle = document.getElementById('formTitle');
+      const statusBadge = document.getElementById('statusBadge');
+      const exportTitle = document.getElementById('exportTitle');
+      const copyBtn = document.getElementById('copyBtn');
+      const pdfBtn = document.getElementById('pdfBtn');
+
+      if (formTitle) formTitle.textContent = t.formTitle;
+      if (statusBadge) statusBadge.textContent = t.statusReady;
+      if (exportTitle) exportTitle.textContent = t.exportQ;
+      if (copyBtn) copyBtn.lastElementChild.textContent = t.copy;
+      if (pdfBtn) pdfBtn.lastElementChild.textContent = t.pdf;
+    }
+    if (langToggle) {
+      applyLang(langToggle.value || 'en');
+      langToggle.addEventListener('change', (e) => applyLang(e.target.value));
+    }
+
+    // Basic validation helpers
+    const form = document.getElementById('proposalForm');
+    const clientName = document.getElementById('clientName');
+    const brief = document.getElementById('brief');
+    const vertical = document.getElementById('vertical');
+    const loadingMessage = document.getElementById('loadingMessage');
+    const preview = document.getElementById('preview');
+    const proposalContent = document.getElementById('proposalContent');
+
+    function showError(el, errorId) {
+      const msg = document.getElementById(errorId);
+      if (el) el.style.borderColor = '#dc2626';
+      if (msg) msg.style.display = 'block';
+    }
+    function clearError(el, errorId) {
+      const msg = document.getElementById(errorId);
+      if (el) el.style.borderColor = '#e2e8f0';
+      if (msg) msg.style.display = 'none';
+    }
+
+    function validateForm() {
+      let valid = true;
+      if (!clientName.value.trim()) { showError(clientName, 'clientNameError'); valid = false; } else { clearError(clientName, 'clientNameError'); }
+      if (!brief.value.trim() || brief.value.trim().length < 20) { showError(brief, 'briefError'); valid = false; } else { clearError(brief, 'briefError'); }
+      if (!vertical.value) { showError(vertical, 'verticalError'); valid = false; } else { clearError(vertical, 'verticalError'); }
+      return valid;
+    }
+
+    // Content generators
+    function generateScope(service) {
+      if (service === 'web') {
+        return `
+          <h3 style="margin:18px 0 8px;color:#1f2937;">Scope of Work</h3>
+          <ul style="margin:0;padding-left:18px;">
+            <li>Discovery, requirements, and IA</li>
+            <li>UI/UX wireframes and high-fidelity design</li>
+            <li>Responsive frontend (HTML/CSS/JS)</li>
+            <li>Backend and database (as needed)</li>
+            <li>Testing, QA, and performance optimization</li>
+            <li>Deployment and handover</li>
+          </ul>
+        `;
+      }
+      return `
+        <h3 style="margin:18px 0 8px;color:#1f2937;">Scope of Work</h3>
+        <ul style="margin:0;padding-left:18px;">
+          <li>Content outline and tone alignment</li>
+          <li>Drafting with research and SEO basics</li>
+          <li>Two revision cycles</li>
+          <li>Proofreading and final polish</li>
+        </ul>
+      `;
+    }
+
+    function generateMilestones(service) {
+      return `
+        <h3 style="margin:18px 0 8px;color:#1f2937;">Project Milestones & Timeline</h3>
+        <ol style="margin:0;padding-left:18px;">
+          <li>Kickoff & Discovery — Week 1</li>
+          <li>${service === 'web' ? 'Design & Frontend' : 'Drafting & Review'} — Weeks 2–3</li>
+          <li>${service === 'web' ? 'Backend & Integration' : 'Revisions & Final'} — Weeks 3–4</li>
+          <li>QA, Handover & Launch — Final Week</li>
+        </ol>
+      `;
+    }
+
+    function generatePricing(budget, service) {
+      let tiers = '';
+      if (service === 'web') {
+        tiers = `
+          <ul style="margin:0;padding-left:18px;">
+            <li>Starter (Landing) — ₹25,000–₹45,000</li>
+            <li>Growth (Multi-page) — ₹60,000–₹110,000</li>
+            <li>Pro (Custom + Admin) — ₹150,000+</li>
+          </ul>
+        `;
+      } else {
+        tiers = `
+          <ul style="margin:0;padding-left:18px;">
+            <li>Blog/Article — ₹2,000–₹5,000 per piece</li>
+            <li>Website Copy — ₹15,000–₹40,000 (per section)</li>
+            <li>Long-form/Whitepaper — ₹20,000–₹60,000</li>
+          </ul>
+        `;
+      }
+      const note = budget ? `<p style="margin-top:8px;color:#475569;">Approx. client budget noted: <strong>₹${Number(budget).toLocaleString('en-IN')}</strong></p>` : '';
+      return `
+        <h3 style="margin:18px 0 8px;color:#1f2937;">Investment Options</h3>
+        ${tiers}
+        ${note}
+      `;
+    }
+
+    function generateNextSteps() {
+      return `
+        <h3 style="margin:18px 0 8px;color:#1f2937;">Next Steps</h3>
+        <ul style="margin:0;padding-left:18px;">
+          <li>Confirm scope and timeline</li>
+          <li>Sign-off and advance to start</li>
+          <li>Kickoff call and project workspace</li>
+        </ul>
+      `;
+    }
+
+    // Generate button handler
+    const generateBtn = document.getElementById('generateBtn');
+    if (generateBtn) {
+      generateBtn.addEventListener('click', () => {
+        if (!validateForm()) return;
+
+        loadingMessage.style.display = 'block';
+        setTimeout(() => {
+          const name = clientName.value.trim();
+          const service = vertical.value;
+          const budgetVal = document.getElementById('budget').value;
+
+          const intro = `
+            <p>Dear <strong>${name}</strong>,</p>
+            <p>Thank you for considering our services. Based on your project brief, we propose the following solution tailored to your needs.</p>
+          `;
+
+          const content = [
+            intro,
+            generateScope(service),
+            generateMilestones(service),
+            generatePricing(budgetVal, service),
+            generateNextSteps(),
+            `<p style="margin-top:16px;">Best regards,<br><strong>Your Freelance Team</strong></p>`
+          ].join('\\n');
+
+          proposalContent.innerHTML = content;
+          document.getElementById('preview').style.display = 'block';
+          document.getElementById('exportSection').style.display = 'block';
+          loadingMessage.style.display = 'none';
+
+          // Smooth scroll to preview
+          document.getElementById('preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 600);
+      });
+    }
+
+    // Copy to clipboard
+    const copyBtn = document.getElementById('copyBtn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        const html = proposalContent.innerText || proposalContent.textContent || '';
+        try {
+          await navigator.clipboard.writeText(html);
+          copyBtn.style.transform = 'translateY(-2px)';
+          setTimeout(() => (copyBtn.style.transform = ''), 200);
+        } catch (e) {
+          alert('Copy failed. Select the text and press Ctrl/Cmd + C.');
+        }
+      });
+    }
+
+    // PDF export (lightweight text-only for now)
+    const pdfBtn = document.getElementById('pdfBtn');
+    if (pdfBtn) {
+      pdfBtn.addEventListener('click', () => {
+        const text = proposalContent.innerText || '';
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'ScopeBuilderAI_Proposal.txt';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        pdfBtn.style.transform = 'translateY(-2px)';
+        setTimeout(() => (pdfBtn.style.transform = ''), 200);
+      });
+    }
+  </script>
+</body>
+</html>
 
