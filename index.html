@@ -5,10 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ScopeBuilderAI — Pro Proposal Generator</title>
   <meta name="description" content="Generate professional client proposals in minutes. Clean templates, smart sections, and export-ready formats." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Favicon and app icons -->
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#1e3a8a">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 
   <style>
-    /* Base / Reset */
+    /* Reset / Base */
     *, *::before, *::after { box-sizing: border-box; }
     html, body { height: 100%; }
     body {
@@ -17,26 +27,23 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       line-height: 1.6;
-      color: #1f2937; /* slate-800 */
+      color: #1f2937;
       background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
     }
 
     :root {
       --brand-50: #ebf5ff;
-      --brand-100: #d6eaff;
-      --brand-200: #b3d6ff;
-      --brand-300: #84bcff;
       --brand-400: #57a2ff;
       --brand-500: #3a8bff;
       --brand-600: #2e70d3;
       --brand-700: #275ab0;
-      --brand-800: #214a8f;
-      --brand-900: #1e3a8a; /* deep brand */
-      --accent: #48bb78; /* green accent */
-      --card-bg: rgba(255,255,255,0.9);
+      --brand-900: #1e3a8a;
+      --accent: #48bb78;
+      --card-bg: rgba(255,255,255,0.92);
       --border: rgba(226,232,240,0.9);
       --shadow: 0 18px 60px rgba(0,0,0,0.12);
       --radius-lg: 20px;
+      --splash-min: 2200ms; /* 2.2s minimum hold */
     }
 
     /* Layout container */
@@ -47,7 +54,7 @@
       padding: clamp(12px, 2vw, 20px);
     }
 
-    /* Premium Intro Loader (Splash) */
+    /* PREMIUM INTRO SPLASH */
     .splash {
       position: fixed;
       inset: 0;
@@ -59,10 +66,12 @@
       display: grid;
       place-items: center;
       transition: opacity .6s ease, visibility .6s ease;
-      opacity: 1;
+      opacity: 0; /* start transparent */
+      animation: splash-fade-in 200ms ease forwards; /* 200ms fade-in */
       visibility: visible;
     }
     .splash.hide { opacity: 0; visibility: hidden; }
+    @keyframes splash-fade-in { to { opacity: 1; } }
 
     .splash-card {
       background: var(--card-bg);
@@ -83,30 +92,54 @@
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
+    /* Logo scale-in + glow pulse */
     .splash-logo {
       width: clamp(140px, 18vw, 220px);
       height: auto;
       display: block;
-      filter:
-        drop-shadow(0 10px 30px rgba(58,139,255,0.18))
-        drop-shadow(0 3px 10px rgba(0,0,0,0.08));
-      transition: transform .4s ease;
+      transform: scale(0.96);
+      opacity: 0;
+      animation:
+        logo-in 600ms cubic-bezier(.2,.8,.2,1) 120ms forwards,
+        logo-glow 2400ms ease-in-out 800ms infinite;
     }
-    .splash-card:hover .splash-logo { transform: translateY(-2px); }
+    @keyframes logo-in {
+      0% { transform: scale(0.96); opacity: 0; filter: blur(1px); }
+      100% { transform: scale(1); opacity: 1; filter: none; }
+    }
+    @keyframes logo-glow {
+      0%,100% { filter: drop-shadow(0 10px 30px rgba(58,139,255,0.20)); }
+      50% { filter: drop-shadow(0 16px 42px rgba(58,139,255,0.30)); }
+    }
 
+    /* Splash title with letter-by-letter reveal (JS wraps .char spans) */
     .splash-title {
       margin: 2px 0 0;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: .3px;
       font-size: clamp(18px, 2.2vw, 22px);
       color: var(--brand-900);
       text-align: center;
+      display: inline-block;
+      white-space: nowrap;
     }
+    .splash-title .char {
+      display: inline-block;
+      transform: translateY(6px);
+      opacity: 0;
+      animation: char-in 520ms cubic-bezier(.2,.8,.2,1) forwards;
+    }
+    @keyframes char-in {
+      0% { transform: translateY(6px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
     .splash-sub {
       margin: 0;
       font-size: 14px;
-      color: #64748b; /* slate-500 */
+      color: #64748b;
       text-align: center;
+      font-weight: 700;
     }
 
     .loader-ring {
@@ -122,7 +155,7 @@
     .splash-progress {
       width: 180px; height: 6px;
       border-radius: 999px;
-      background: #e5e7eb; /* zinc-200 */
+      background: #e5e7eb;
       overflow: hidden;
       position: relative;
       margin-top: 2px;
@@ -141,7 +174,7 @@
       100% { transform: translateX(120%); }
     }
 
-    /* Header card */
+    /* Header card and strong typography */
     header.app-header {
       text-align: center;
       padding: 28px 20px;
@@ -163,7 +196,7 @@
     }
     .title {
       margin: 0 0 8px;
-      font-weight: 800;
+      font-weight: 900;
       font-size: clamp(22px, 3vw, 28px);
       background: linear-gradient(135deg, var(--brand-700), var(--brand-500));
       -webkit-background-clip: text;
@@ -174,18 +207,19 @@
     .tagline {
       margin: 0 auto 14px;
       max-width: 680px;
-      color: #64748b;
+      color: #475569;
       font-size: clamp(14px, 1.8vw, 15px);
       padding-inline: 10px;
+      font-weight: 700;
     }
     .lang-select {
       appearance: none;
       padding: 10px 40px 10px 14px;
       border-radius: 999px;
       border: 1.5px solid #e2e8f0;
-      background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.6' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") no-repeat right 12px center / 18px;
+      background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%236b7280' stroke-linecap='round' stroke-linejoin' stroke-width='1.6' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") no-repeat right 12px center / 18px;
       color: #334155;
-      font-weight: 600;
+      font-weight: 800;
       cursor: pointer;
       transition: border-color .25s ease, transform .2s ease, box-shadow .25s ease;
     }
@@ -202,19 +236,42 @@
       margin: 22px 0 28px;
     }
 
-    /* Accessibility: reduce motion */
+    /* Currency input group */
+    .input-row { display: grid; grid-template-columns: 140px 1fr; gap: 10px; }
+    @media (max-width: 560px) { .input-row { grid-template-columns: 1fr; } }
+    .currency-select {
+      padding: 12px 12px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      background: #fff;
+      font-weight: 800;
+      color: #334155;
+    }
+    .money-input {
+      padding: 14px 16px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      background: #fff;
+      font-weight: 800;
+      width: 100%;
+    }
+    .budget-note { margin-top: 6px; font-size: 12px; color: #475569; }
+
+    /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
       .loader-ring, .splash-progress::after { animation: none !important; }
       .splash-card { animation: none !important; }
+      .splash-logo { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .splash-title .char { animation: none !important; opacity: 1 !important; transform: none !important; }
     }
   </style>
 </head>
 <body>
-  <!-- Classy Intro Splash (with your logo) -->
+  <!-- Classy Intro Splash -->
   <div id="splash" class="splash" aria-hidden="true">
     <div class="splash-card" role="status" aria-label="Loading ScopeBuilderAI">
-      <img src="scopebuilderai-logo-v2.png" alt="ScopeBuilderAI" class="splash-logo" />
-      <h1 class="splash-title">Preparing your workspace…</h1>
+      <img src="/scopebuilderai-logo-v2.png" alt="ScopeBuilderAI" class="splash-logo" />
+      <h1 class="splash-title" id="splashTitle">Preparing your workspace…</h1>
       <p class="splash-sub">Loading templates, pricing logic, and export tools</p>
       <div class="loader-ring" aria-hidden="true"></div>
       <div class="splash-progress" aria-hidden="true"></div>
@@ -230,58 +287,65 @@
         <option value="hi">🇮🇳 हिंदी</option>
       </select>
     </header>
-    <!-- Form Section -->
+      <!-- Form Section -->
     <section class="card" id="formSection" aria-labelledby="formTitle">
-      <h2 id="formTitle" class="form-title" style="margin-top:0;font-size:20px;font-weight:800;color:#1f2937;">
+      <h2 id="formTitle" style="margin-top:0;font-size:20px;font-weight:900;color:#0f172a;">
         Create New Proposal
       </h2>
 
       <form id="proposalForm" novalidate>
         <div class="form-group" style="margin-bottom:18px;">
-          <label for="clientName" style="display:block;font-weight:700;font-size:13px;color:#475569;margin-bottom:6px;">
+          <label for="clientName" style="display:block;font-weight:800;font-size:13px;color:#334155;margin-bottom:6px;">
             Client Name *
           </label>
           <input type="text" id="clientName" placeholder="e.g., ABC Marketing Agency" required
-                 style="width:100%;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);" />
+                 style="width:100%;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);font-weight:700;" />
           <div class="error-message" id="clientNameError" style="display:none;color:#dc2626;font-size:12px;margin-top:6px;">
             Please enter the client name
           </div>
         </div>
 
         <div class="form-group" style="margin-bottom:18px;">
-          <label for="brief" style="display:block;font-weight:700;font-size:13px;color:#475569;margin-bottom:6px;">
+          <label for="brief" style="display:block;font-weight:800;font-size:13px;color:#334155;margin-bottom:6px;">
             Project Brief *
           </label>
           <textarea id="brief" required
                     placeholder="Describe the project requirements, goals, target audience, and key deliverables..."
-                    style="width:100%;min-height:120px;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);"></textarea>
+                    style="width:100%;min-height:120px;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);font-weight:700;"></textarea>
           <div class="error-message" id="briefError" style="display:none;color:#dc2626;font-size:12px;margin-top:6px;">
             Please provide project details (minimum 20 characters)
           </div>
         </div>
 
-        <div class="form-group" style="margin-bottom:18px;position:relative;">
-          <label for="budget" style="display:block;font-weight:700;font-size:13px;color:#475569;margin-bottom:6px;">
+        <div class="form-group" style="margin-bottom:18px;">
+          <label for="budget" style="display:block;font-weight:800;font-size:13px;color:#334155;margin-bottom:6px;">
             Estimated Budget
           </label>
-          <input type="number" id="budget" min="100" max="100000" placeholder="e.g., 5000" step="100"
-                 style="width:100%;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);" />
+          <div class="input-row">
+            <select id="currency" class="currency-select" aria-label="Currency">
+              <option value="INR" selected>INR ₹</option>
+              <option value="USD">USD $</option>
+              <option value="EUR">EUR €</option>
+            </select>
+            <input type="number" id="budget" min="100" max="10000000" placeholder="e.g., 5000" step="100" class="money-input" />
+          </div>
+          <div id="budgetNote" class="budget-note"></div>
         </div>
 
         <div class="form-group" style="margin-bottom:18px;">
-          <label for="deadline" style="display:block;font-weight:700;font-size:13px;color:#475569;margin-bottom:6px;">
+          <label for="deadline" style="display:block;font-weight:800;font-size:13px;color:#334155;margin-bottom:6px;">
             Preferred Deadline
           </label>
           <input type="date" id="deadline"
-                 style="width:100%;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);" />
+                 style="width:100%;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);font-weight:700;" />
         </div>
 
         <div class="form-group" style="margin-bottom:22px;">
-          <label for="vertical" style="display:block;font-weight:700;font-size:13px;color:#475569;margin-bottom:6px;">
+          <label for="vertical" style="display:block;font-weight:800;font-size:13px;color:#334155;margin-bottom:6px;">
             Service Type *
           </label>
           <select id="vertical" required
-                  style="width:100%;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                  style="width:100%;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);font-weight:700;">
             <option value="">Select Service Type</option>
             <option value="web">🌐 Web Development</option>
             <option value="content">✍️ Content Writing</option>
@@ -292,14 +356,15 @@
         </div>
 
         <button type="button" id="generateBtn"
-                style="width:100%;padding:16px 18px;border:none;border-radius:12px;font-weight:800;letter-spacing:.3px;
-                       color:#fff;background:linear-gradient(135deg, var(--brand-600), var(--brand-500));cursor:pointer;
+                style="width:100%;padding:16px 18px;border:none;border-radius:12px;
+                       font-weight:900;letter-spacing:.3px;color:#fff;
+                       background:linear-gradient(135deg, var(--brand-600), var(--brand-500));cursor:pointer;
                        box-shadow:0 10px 28px rgba(58,139,255,0.25);transition:transform .18s ease, box-shadow .2s ease;">
           🚀 Generate Professional Proposal
         </button>
 
         <div id="loadingMessage"
-             style="display:none;background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;padding:12px 14px;border-radius:12px;margin-top:16px;font-weight:600;">
+             style="display:none;background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;padding:12px 14px;border-radius:12px;margin-top:16px;font-weight:800;">
           Generating your customized proposal... This may take a moment.
         </div>
       </form>
@@ -308,39 +373,39 @@
     <!-- Preview Section -->
     <section id="preview" class="card" aria-labelledby="previewTitle" style="display:none;border-top:5px solid var(--brand-500);">
       <div class="preview-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #e2e8f0;">
-        <h2 id="previewTitle" style="margin:0;font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--brand-700),var(--brand-500));-webkit-background-clip:text;background-clip:text;color:transparent;">
+        <h2 id="previewTitle" style="margin:0;font-size:22px;font-weight:900;background:linear-gradient(135deg,var(--brand-700),var(--brand-500));-webkit-background-clip:text;background-clip:text;color:transparent;">
           Your Professional Proposal
         </h2>
-        <span id="statusBadge" style="background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:800;">
+        <span id="statusBadge" style="background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:900;">
           Ready to Review
         </span>
       </div>
-      <div id="proposalContent" style="color:#374151;font-size:15px;line-height:1.65;">
+      <div id="proposalContent" style="color:#111827;font-size:15px;line-height:1.65;font-weight:600;">
         <!-- Dynamic proposal content will be inserted here -->
       </div>
     </section>
 
     <!-- Export Section -->
     <section class="card" id="exportSection" aria-labelledby="exportTitle" style="display:none;">
-      <h3 id="exportTitle" style="margin-top:0;color:#1f2937;font-size:18px;font-weight:800;">Ready to Share Your Proposal?</h3>
-      <p style="color:#64748b;margin:8px 0 18px;font-size:14px;">Export your customized proposal in professional formats</p>
+      <h3 id="exportTitle" style="margin-top:0;color:#0f172a;font-size:18px;font-weight:900;">Ready to Share Your Proposal?</h3>
+      <p style="color:#475569;margin:8px 0 18px;font-size:14px;font-weight:700;">Export your customized proposal in professional formats</p>
       <div class="export-buttons" style="display:flex;gap:14px;flex-wrap:wrap;">
         <button id="copyBtn"
                 style="flex:1 1 240px;min-width:220px;display:inline-flex;align-items:center;justify-content:center;gap:10px;
                        padding:14px 22px;border-radius:999px;border:1.5px solid #e2e8f0;background:#fff;color:var(--brand-700);
-                       font-weight:800;cursor:pointer;transition:transform .18s ease, box-shadow .2s ease;">
+                       font-weight:900;cursor:pointer;transition:transform .18s ease, box-shadow .2s ease;">
           <span>📋</span><span>Copy to Clipboard (Google Docs)</span>
         </button>
         <button id="pdfBtn"
                 style="flex:1 1 240px;min-width:220px;display:inline-flex;align-items:center;justify-content:center;gap:10px;
                        padding:14px 22px;border-radius:999px;border:none;background:linear-gradient(135deg,#48bb78,#38a169);
-                       color:#fff;font-weight:800;cursor:pointer;box-shadow:0 10px 28px rgba(72,187,120,0.25);
+                       color:#fff;font-weight:900;cursor:pointer;box-shadow:0 10px 28px rgba(72,187,120,0.25);
                        transition:transform .18s ease, box-shadow .2s ease;">
           <span>📄</span><span>Download PDF (Client Ready)</span>
         </button>
       </div>
       <div style="margin-top:16px;padding:12px;border-left:4px solid var(--brand-500);background:#f8fafc;border-radius:12px;">
-        <small style="color:#64748b;">
+        <small style="color:#64748b;font-weight:700;">
           💡 <strong>Pro Tip:</strong> Customize the final proposal with your branding and contact details before sending to clients.
         </small>
       </div>
@@ -348,39 +413,63 @@
 
     <!-- Footer -->
     <footer class="card" aria-label="Footer" style="text-align:center;">
-      <p style="margin:0 0 6px;color:#64748b;font-size:13px;">
+      <p style="margin:0 0 6px;color:#64748b;font-size:13px;font-weight:700;">
         This AI-generated proposal is a professional starting point. Please review and customize with your specific branding, pricing details, and legal terms.
       </p>
-      <p style="margin:0;color:#94a3b8;font-size:12px;">
+      <p style="margin:0;color:#94a3b8;font-size:12px;font-weight:700;">
         © 2025 ScopeBuilderAI • Built with ❤️ for Freelancers Worldwide •
         <a href="#" style="color:var(--brand-600);text-decoration:none;">Privacy Policy</a> |
         <a href="#" style="color:var(--brand-600);text-decoration:none;">Terms of Use</a>
       </p>
     </footer>
   </div> <!-- end .container -->
+  <!-- Scripts -->
   <script>
-    // Smooth Splash Fade-Out and Reveal
+    // Split text into spans for letter-by-letter animation
+    function splitToChars(el) {
+      if (!el) return;
+      const text = el.textContent;
+      el.textContent = '';
+      const frag = document.createDocumentFragment();
+      [...text].forEach((ch, i) => {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.style.animationDelay = (160 + i * 28) + 'ms';
+        span.textContent = ch;
+        frag.appendChild(span);
+      });
+      el.appendChild(frag);
+    }
+
+    // Premium splash timing: 200ms fade-in + min 2.2s + full load
     (function () {
       const splash = document.getElementById('splash');
-      // If splash exists, hide it on load; else no-op
-      window.addEventListener('load', () => {
-        if (!splash) return;
-        // small delay feels premium
-        setTimeout(() => splash.classList.add('hide'), 350);
-        // remove from DOM to avoid focus traps
-        setTimeout(() => splash.remove(), 1000);
-      });
+      const title = document.getElementById('splashTitle');
+      if (title) splitToChars(title);
+      if (!splash) return;
 
-      // Fallback: ensure splash never sticks
+      const MIN_TIME = 2200; // 2.2 seconds
+      let loadDone = false;
+      let timeDone = false;
+
+      setTimeout(() => { timeDone = true; tryHide(); }, MIN_TIME);
+      window.addEventListener('load', () => { loadDone = true; tryHide(); });
+
+      function tryHide() {
+        if (!(loadDone && timeDone)) return;
+        splash.classList.add('hide');
+        setTimeout(() => splash.remove(), 900);
+      }
+
+      // Safety fallback in case of stuck network requests
       setTimeout(() => {
-        if (splash && !splash.classList.contains('hide')) {
-          splash.classList.add('hide');
-          setTimeout(() => splash.remove(), 700);
-        }
-      }, 6000);
+        if (!splash || !splash.isConnected) return;
+        splash.classList.add('hide');
+        setTimeout(() => splash.remove(), 900);
+      }, 8000);
     })();
 
-    // Translations (UI strings only for demo)
+    // Translations (UI labels only)
     const translations = {
       en: {
         formTitle: 'Create New Proposal',
@@ -418,7 +507,7 @@
       langToggle.addEventListener('change', (e) => applyLang(e.target.value));
     }
 
-    // Basic validation helpers
+    // Form references
     const form = document.getElementById('proposalForm');
     const clientName = document.getElementById('clientName');
     const brief = document.getElementById('brief');
@@ -427,26 +516,46 @@
     const preview = document.getElementById('preview');
     const proposalContent = document.getElementById('proposalContent');
 
-    function showError(el, errorId) {
-      const msg = document.getElementById(errorId);
-      if (el) el.style.borderColor = '#dc2626';
-      if (msg) msg.style.display = 'block';
+    // Currency helpers
+    const currencySelect = document.getElementById('currency');
+    const budgetInput = document.getElementById('budget');
+    const budgetNote = document.getElementById('budgetNote');
+
+    const currencyLocales = { INR: 'en-IN', USD: 'en-US', EUR: 'de-DE' };
+
+    function formatMoney(value, ccy) {
+      const locale = currencyLocales[ccy] || 'en-US';
+      try {
+        return new Intl.NumberFormat(locale, {
+          style: 'currency', currency: ccy, maximumFractionDigits: 0
+        }).format(value || 0);
+      } catch {
+        return (value || 0).toLocaleString(locale) + ' ' + ccy;
+      }
     }
-    function clearError(el, errorId) {
-      const msg = document.getElementById(errorId);
-      if (el) el.style.borderColor = '#e2e8f0';
-      if (msg) msg.style.display = 'none';
+
+    function updateBudgetNote() {
+      const ccy = currencySelect?.value || 'INR';
+      const val = Number(budgetInput?.value || 0);
+      if (!budgetNote) return;
+      budgetNote.textContent = val ? ('Entered: ' + formatMoney(val, ccy)) : '';
     }
+    currencySelect?.addEventListener('change', updateBudgetNote);
+    budgetInput?.addEventListener('input', updateBudgetNote);
+
+    // Validation
+    function show(id) { const el = document.getElementById(id); if (el) el.style.display = 'block'; }
+    function hide(id) { const el = document.getElementById(id); if (el) el.style.display = 'none'; }
 
     function validateForm() {
       let valid = true;
-      if (!clientName.value.trim()) { showError(clientName, 'clientNameError'); valid = false; } else { clearError(clientName, 'clientNameError'); }
-      if (!brief.value.trim() || brief.value.trim().length < 20) { showError(brief, 'briefError'); valid = false; } else { clearError(brief, 'briefError'); }
-      if (!vertical.value) { showError(vertical, 'verticalError'); valid = false; } else { clearError(vertical, 'verticalError'); }
+      if (!clientName.value.trim()) { show('clientNameError'); valid=false; } else { hide('clientNameError'); }
+      if (!brief.value.trim() || brief.value.trim().length < 20) { show('briefError'); valid=false; } else { hide('briefError'); }
+      if (!vertical.value) { show('verticalError'); valid=false; } else { hide('verticalError'); }
       return valid;
     }
 
-    // Content generators
+    // Generators
     function generateScope(service) {
       if (service === 'web') {
         return `
@@ -484,7 +593,12 @@
       `;
     }
 
-    function generatePricing(budget, service) {
+    function injectBudgetNoteIntoPreview(budgetVal, ccy) {
+      const formatted = formatMoney(Number(budgetVal || 0), ccy);
+      return `<p style="margin-top:8px;color:#475569;">Approx. client budget noted: <strong>${formatted}</strong></p>`;
+    }
+
+    function generatePricing(budget, service, ccy) {
       let tiers = '';
       if (service === 'web') {
         tiers = `
@@ -503,7 +617,7 @@
           </ul>
         `;
       }
-      const note = budget ? `<p style="margin-top:8px;color:#475569;">Approx. client budget noted: <strong>₹${Number(budget).toLocaleString('en-IN')}</strong></p>` : '';
+      const note = budget ? injectBudgetNoteIntoPreview(budget, ccy) : '';
       return `
         <h3 style="margin:18px 0 8px;color:#1f2937;">Investment Options</h3>
         ${tiers}
@@ -522,7 +636,7 @@
       `;
     }
 
-    // Generate button handler
+    // Generate button
     const generateBtn = document.getElementById('generateBtn');
     if (generateBtn) {
       generateBtn.addEventListener('click', () => {
@@ -533,6 +647,7 @@
           const name = clientName.value.trim();
           const service = vertical.value;
           const budgetVal = document.getElementById('budget').value;
+          const ccy = document.getElementById('currency').value;
 
           const intro = `
             <p>Dear <strong>${name}</strong>,</p>
@@ -543,7 +658,7 @@
             intro,
             generateScope(service),
             generateMilestones(service),
-            generatePricing(budgetVal, service),
+            generatePricing(budgetVal, service, ccy),
             generateNextSteps(),
             `<p style="margin-top:16px;">Best regards,<br><strong>Your Freelance Team</strong></p>`
           ].join('\\n');
@@ -553,9 +668,8 @@
           document.getElementById('exportSection').style.display = 'block';
           loadingMessage.style.display = 'none';
 
-          // Smooth scroll to preview
           document.getElementById('preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 600);
+        }, 700);
       });
     }
 
@@ -563,9 +677,9 @@
     const copyBtn = document.getElementById('copyBtn');
     if (copyBtn) {
       copyBtn.addEventListener('click', async () => {
-        const html = proposalContent.innerText || proposalContent.textContent || '';
+        const text = proposalContent.innerText || proposalContent.textContent || '';
         try {
-          await navigator.clipboard.writeText(html);
+          await navigator.clipboard.writeText(text);
           copyBtn.style.transform = 'translateY(-2px)';
           setTimeout(() => (copyBtn.style.transform = ''), 200);
         } catch (e) {
@@ -574,7 +688,7 @@
       });
     }
 
-    // PDF export (lightweight text-only for now)
+    // TXT export (simple, reliable). Can be upgraded to PDF via jsPDF later.
     const pdfBtn = document.getElementById('pdfBtn');
     if (pdfBtn) {
       pdfBtn.addEventListener('click', () => {
@@ -595,4 +709,3 @@
   </script>
 </body>
 </html>
-
