@@ -44,7 +44,7 @@
       --border: rgba(226,232,240,0.9);
       --shadow: 0 18px 60px rgba(0,0,0,0.12);
       --radius-lg: 20px;
-      --splash-min: 2200ms; /* 2.2s minimum hold */
+      --splash-min: 2200ms;
       --text: #0f172a;
       --text-muted: #334155;
       --bg: #f8fafc;
@@ -59,12 +59,9 @@
       --border-strong: rgba(51,65,85,0.6);
     }
 
-    /* Layout container */
     .container {
-      max-width: 950px;
-      width: 100%;
-      margin-inline: auto;
-      padding: clamp(12px, 2vw, 20px);
+      max-width: 950px; width: 100%;
+      margin-inline: auto; padding: clamp(12px, 2vw, 20px);
     }
 
     /* PREMIUM INTRO SPLASH */
@@ -103,7 +100,6 @@
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Logo scale-in + glow pulse */
     .splash-logo {
       width: clamp(140px, 18vw, 220px);
       height: auto; display: block;
@@ -121,7 +117,6 @@
       50% { filter: drop-shadow(0 16px 42px rgba(58,139,255,0.30)); }
     }
 
-    /* Splash title with letter-by-letter reveal */
     .splash-title {
       margin: 2px 0 0; font-weight: 900; letter-spacing: .3px;
       font-size: clamp(18px, 2.2vw, 22px); color: var(--text);
@@ -131,10 +126,7 @@
       display: inline-block; transform: translateY(6px); opacity: 0;
       animation: char-in 520ms cubic-bezier(.2,.8,.2,1) forwards;
     }
-    @keyframes char-in {
-      0% { transform: translateY(6px); opacity: 0; }
-      100% { transform: translateY(0); opacity: 1; }
-    }
+    @keyframes char-in { 0% { transform: translateY(6px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
     .splash-sub { margin: 0; font-size: 14px; color: var(--text-muted); text-align: center; font-weight: 700; }
     .loader-ring { width: 44px; height: 44px; border: 3px solid #e2e8f0; border-top-color: var(--brand-500); border-radius: 50%; animation: spin .9s linear infinite; margin-top: 6px; }
     @keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
@@ -142,7 +134,6 @@
     .splash-progress::after { content: ''; position: absolute; inset: 0; width: 40%; background: linear-gradient(90deg, var(--brand-400), var(--brand-600)); animation: bar 1.4s ease-in-out infinite; border-radius: inherit; }
     @keyframes bar { 0% { transform: translateX(-60%);} 50% { transform: translateX(20%);} 100% { transform: translateX(120%);} }
 
-    /* Header + actions */
     header.app-header {
       text-align: center; padding: 28px 20px;
       background: var(--card); border: 1px solid var(--border-strong);
@@ -174,7 +165,6 @@
     .lang-select:hover { transform: translateY(-1px); border-color: var(--brand-400); box-shadow: 0 6px 20px rgba(58,139,255,0.18); }
     .lang-select:focus { outline: none; border-color: var(--brand-500); box-shadow: 0 0 0 4px rgba(58,139,255,0.15); }
 
-    /* Theme toggle switch */
     .theme-toggle {
       appearance: none; width: 50px; height: 28px; border-radius: 999px;
       background: #e2e8f0; position: relative; cursor: pointer; border: 1px solid var(--border-strong);
@@ -188,48 +178,63 @@
     .theme-toggle[data-mode="dark"]::after { transform: translateX(22px); }
     .theme-icon { font-size: 14px; color: var(--text-muted); font-weight: 800; }
 
-    /* Cards */
     .card {
       background: var(--card); border: 1px solid var(--border-strong);
       border-radius: var(--radius-lg); box-shadow: var(--shadow);
       padding: clamp(22px, 2.2vw, 36px); margin: 22px 0 28px;
     }
 
-    /* Form typography upgrades */
+    /* FORM POLISH */
     #formTitle { font-size: 22px !important; font-weight: 900 !important; letter-spacing: .2px; color: var(--text); }
-    label { font-size: 14px !important; font-weight: 900 !important; color: var(--text-muted); }
+    .form-group { margin-bottom: 20px; }
+    label { display: inline-block; margin-bottom: 8px; font-size: 14.5px !important; font-weight: 900 !important; color: var(--text-muted); }
 
-    .input-row { display: grid; grid-template-columns: 140px 1fr; gap: 10px; }
-    @media (max-width: 560px) { .input-row { grid-template-columns: 1fr; } }
-    .currency-select {
-      padding: 12px 12px; border: 1.5px solid var(--border-strong);
-      border-radius: 12px; background: #fff; font-weight: 800; color: #334155;
+    input[type="text"], input[type="date"], input[type="number"], select, textarea {
+      width: 100%; border: 1.6px solid var(--border-strong); border-radius: 14px; background: #fff; color: var(--text);
+      font-weight: 800; transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
     }
-    html[data-theme="dark"] .currency-select { background: #0f172a; color: #e5e7eb; border-color: #334155; }
-    .money-input, #clientName, #brief, #deadline, #vertical {
-      padding: 14px 16px; border: 1.5px solid var(--border-strong); border-radius: 12px; background: #fff; font-weight: 800; color: var(--text);
-    }
-    html[data-theme="dark"] .money-input,
-    html[data-theme="dark"] #clientName,
-    html[data-theme="dark"] #brief,
-    html[data-theme="dark"] #deadline,
-    html[data-theme="dark"] #vertical { background: #0f172a; color: #e5e7eb; border-color: #334155; }
+    html[data-theme="dark"] input[type="text"],
+    html[data-theme="dark"] input[type="date"],
+    html[data-theme="dark"] input[type="number"],
+    html[data-theme="dark"] select,
+    html[data-theme="dark"] textarea { background: #0f172a; color: #e5e7eb; border-color: #334155; }
+
+    input[type="text"], input[type="date"], input[type="number"], select { height: 48px; padding: 0 16px; font-size: 16px; }
+    textarea#brief { min-height: 130px; max-height: 360px; resize: vertical; padding: 12px 14px; font-size: 16px !important; line-height: 1.7; }
+
+    ::placeholder { color: #64748b; font-weight: 800; opacity: .95; }
+    html[data-theme="dark"] ::placeholder { color: #94a3b8; }
+
+    .input-row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; }
+    .currency-select { height: 48px; }
     #clientName { font-size: 16px !important; }
     #clientName::placeholder { font-size: 16px; font-weight: 900; }
-    #brief { font-size: 16px !important; line-height: 1.7; }
-    #brief::placeholder { font-size: 15px; font-weight: 800; }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: var(--brand-500); box-shadow: 0 0 0 4px rgba(58,139,255,0.18);
+    }
+
+    #generateBtn {
+      width: 100%; height: 50px; border: none; border-radius: 14px;
+      background: linear-gradient(135deg, var(--brand-600), var(--brand-500));
+      color: #fff; font-weight: 900; letter-spacing: .3px;
+      box-shadow: 0 10px 28px rgba(58,139,255,0.25);
+      transition: transform .12s ease, box-shadow .18s ease, filter .18s ease;
+    }
+    #generateBtn:hover { transform: translateY(-1px); filter: brightness(1.03); }
+    #generateBtn:active { transform: translateY(0); filter: brightness(.98); }
+
     .budget-note { margin-top: 6px; font-size: 12px; color: var(--text-muted); }
-
     #preview #proposalContent { color: var(--text); font-weight: 700; }
-    #generateBtn, #copyBtn, #pdfBtn { font-size: 15px; font-weight: 900; }
 
-    /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
       .loader-ring, .splash-progress::after { animation: none !important; }
       .splash-card { animation: none !important; }
       .splash-logo { animation: none !important; opacity: 1 !important; transform: none !important; }
       .splash-title .char { animation: none !important; opacity: 1 !important; transform: none !important; }
     }
+
+    @keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
   </style>
 </head>
 <body>
@@ -259,12 +264,13 @@
         </select>
       </div>
     </header>
-        <!-- Form Section -->
+
+    <!-- Form Section -->
     <section class="card" id="formSection" aria-labelledby="formTitle">
       <h2 id="formTitle">Create New Proposal</h2>
 
       <form id="proposalForm" novalidate>
-        <div class="form-group" style="margin-bottom:18px;">
+        <div class="form-group">
           <label for="clientName">Client Name *</label>
           <input type="text" id="clientName" placeholder="e.g., ABC Marketing Agency" required />
           <div class="error-message" id="clientNameError" style="display:none;color:#dc2626;font-size:12px;margin-top:6px;">
@@ -272,16 +278,16 @@
           </div>
         </div>
 
-        <div class="form-group" style="margin-bottom:18px;">
+        <div class="form-group">
           <label for="brief">Project Brief *</label>
           <textarea id="brief" required
-                    placeholder="Describe the project requirements, goals, target audience, and key deliverables..."></textarea>
+            placeholder="Describe the project requirements, goals, target audience, and key deliverables..."></textarea>
           <div class="error-message" id="briefError" style="display:none;color:#dc2626;font-size:12px;margin-top:6px;">
             Please provide project details (minimum 20 characters)
           </div>
         </div>
 
-        <div class="form-group" style="margin-bottom:18px;">
+        <div class="form-group">
           <label for="budget">Estimated Budget</label>
           <div class="input-row">
             <select id="currency" class="currency-select" aria-label="Currency">
@@ -294,12 +300,12 @@
           <div id="budgetNote" class="budget-note"></div>
         </div>
 
-        <div class="form-group" style="margin-bottom:18px;">
+        <div class="form-group">
           <label for="deadline">Preferred Deadline</label>
           <input type="date" id="deadline" />
         </div>
 
-        <div class="form-group" style="margin-bottom:22px;">
+        <div class="form-group">
           <label for="vertical">Service Type *</label>
           <select id="vertical" required>
             <option value="">Select Service Type</option>
@@ -311,9 +317,7 @@
           </div>
         </div>
 
-        <button type="button" id="generateBtn">
-          🚀 Generate Professional Proposal
-        </button>
+        <button type="button" id="generateBtn">🚀 Generate Professional Proposal</button>
 
         <div id="loadingMessage"
              style="display:none;background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;padding:12px 14px;border-radius:12px;margin-top:16px;font-weight:800;">
@@ -373,6 +377,7 @@
       </p>
     </footer>
   </div> <!-- end .container -->
+
   <!-- Scripts -->
   <script>
     // Split text into spans for letter-by-letter animation
@@ -391,16 +396,15 @@
       el.appendChild(frag);
     }
 
-    // Premium splash timing: 200ms fade-in + min 2.2s + full load
+    // Premium splash timing
     (function () {
       const splash = document.getElementById('splash');
       const title = document.getElementById('splashTitle');
       if (title) splitToChars(title);
       if (!splash) return;
 
-      const MIN_TIME = 2200; // 2.2 seconds
-      let loadDone = false;
-      let timeDone = false;
+      const MIN_TIME = 2200;
+      let loadDone = false, timeDone = false;
 
       setTimeout(() => { timeDone = true; tryHide(); }, MIN_TIME);
       window.addEventListener('load', () => { loadDone = true; tryHide(); });
@@ -410,13 +414,7 @@
         splash.classList.add('hide');
         setTimeout(() => splash.remove(), 900);
       }
-
-      // Safety fallback in case of stuck network requests
-      setTimeout(() => {
-        if (!splash || !splash.isConnected) return;
-        splash.classList.add('hide');
-        setTimeout(() => splash.remove(), 900);
-      }, 8000);
+      setTimeout(() => { if (splash?.isConnected) { splash.classList.add('hide'); setTimeout(() => splash.remove(), 900); } }, 8000);
     })();
 
     // Theme persistence and toggle
@@ -430,7 +428,7 @@
         if (btn) btn.setAttribute('data-mode', mode);
         try { localStorage.setItem(key, mode); } catch {}
       }
-      const saved = (function(){ try { return localStorage.getItem(key); } catch { return null; } })();
+      const saved = (() => { try { return localStorage.getItem(key); } catch { return null; } })();
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       const initial = saved || (prefersDark ? 'dark' : 'light');
       apply(initial);
@@ -445,24 +443,11 @@
       }
     })();
 
-    // Translations (UI labels only)
+    // Translations
     const translations = {
-      en: {
-        formTitle: 'Create New Proposal',
-        statusReady: 'Ready to Review',
-        exportQ: 'Ready to Share Your Proposal?',
-        copy: 'Copy to Clipboard (Google Docs)',
-        pdf: 'Download PDF (Client Ready)',
-      },
-      hi: {
-        formTitle: 'नया प्रस्ताव बनाएं',
-        statusReady: 'समीक्षा के लिए तैयार',
-        exportQ: 'क्या आपका प्रस्ताव साझा करने के लिए तैयार है?',
-        copy: 'क्लिपबोर्ड में कॉपी करें (Google Docs)',
-        pdf: 'PDF डाउनलोड करें (ग्राहक हेतु तैयार)',
-      }
+      en: { formTitle: 'Create New Proposal', statusReady: 'Ready to Review', exportQ: 'Ready to Share Your Proposal?', copy: 'Copy to Clipboard (Google Docs)', pdf: 'Download PDF (Client Ready)' },
+      hi: { formTitle: 'नया प्रस्ताव बनाएं', statusReady: 'समीक्षा के लिए तैयार', exportQ: 'क्या आपका प्रस्ताव साझा करने के लिए तैयार है?', copy: 'क्लिपबोर्ड में कॉपी करें (Google Docs)', pdf: 'PDF डाउनलोड करें (ग्राहक हेतु तैयार)' }
     };
-
     const langToggle = document.getElementById('langToggle');
     function applyLang(lang) {
       const t = translations[lang] || translations.en;
@@ -471,7 +456,6 @@
       const exportTitle = document.getElementById('exportTitle');
       const copyBtn = document.getElementById('copyBtn');
       const pdfBtn = document.getElementById('pdfBtn');
-
       if (formTitle) formTitle.textContent = t.formTitle;
       if (statusBadge) statusBadge.textContent = t.statusReady;
       if (exportTitle) exportTitle.textContent = t.exportQ;
@@ -484,12 +468,10 @@
     }
 
     // Form references
-    const form = document.getElementById('proposalForm');
     const clientName = document.getElementById('clientName');
     const brief = document.getElementById('brief');
     const vertical = document.getElementById('vertical');
     const loadingMessage = document.getElementById('loadingMessage');
-    const preview = document.getElementById('preview');
     const proposalContent = document.getElementById('proposalContent');
 
     // Currency helpers
@@ -501,14 +483,11 @@
     function formatMoney(value, ccy) {
       const locale = currencyLocales[ccy] || 'en-US';
       try {
-        return new Intl.NumberFormat(locale, {
-          style: 'currency', currency: ccy, maximumFractionDigits: 0
-        }).format(value || 0);
+        return new Intl.NumberFormat(locale, { style: 'currency', currency: ccy, maximumFractionDigits: 0 }).format(value || 0);
       } catch {
         return (value || 0).toLocaleString(locale) + ' ' + ccy;
       }
     }
-
     function updateBudgetNote() {
       const ccy = currencySelect?.value || 'INR';
       const val = Number(budgetInput?.value || 0);
@@ -521,7 +500,6 @@
     // Validation
     function show(id) { const el = document.getElementById(id); if (el) el.style.display = 'block'; }
     function hide(id) { const el = document.getElementById(id); if (el) el.style.display = 'none'; }
-
     function validateForm() {
       let valid = true;
       if (!clientName.value.trim()) { show('clientNameError'); valid=false; } else { hide('clientNameError'); }
@@ -555,7 +533,6 @@
         </ul>
       `;
     }
-
     function generateMilestones(service) {
       return `
         <h3 style="margin:18px 0 8px;">Project Milestones & Timeline</h3>
@@ -567,12 +544,10 @@
         </ol>
       `;
     }
-
     function injectBudgetNoteIntoPreview(budgetVal, ccy) {
       const formatted = formatMoney(Number(budgetVal || 0), ccy);
       return `<p style="margin-top:8px;color:var(--text-muted);">Approx. client budget noted: <strong>${formatted}</strong></p>`;
     }
-
     function generatePricing(budget, service, ccy) {
       let tiers = '';
       if (service === 'web') {
@@ -599,7 +574,6 @@
         ${note}
       `;
     }
-
     function generateNextSteps() {
       return `
         <h3 style="margin:18px 0 8px;">Next Steps</h3>
@@ -611,12 +585,11 @@
       `;
     }
 
-    // Generate button
+    // Generate
     const generateBtn = document.getElementById('generateBtn');
     if (generateBtn) {
       generateBtn.addEventListener('click', () => {
         if (!validateForm()) return;
-
         loadingMessage.style.display = 'block';
         setTimeout(() => {
           const name = clientName.value.trim();
@@ -628,7 +601,6 @@
             <p>Dear <strong>${name}</strong>,</p>
             <p>Thank you for considering our services. Based on your project brief, we propose the following solution tailored to your needs.</p>
           `;
-
           const content = [
             intro,
             generateScope(service),
@@ -642,13 +614,12 @@
           document.getElementById('preview').style.display = 'block';
           document.getElementById('exportSection').style.display = 'block';
           loadingMessage.style.display = 'none';
-
           document.getElementById('preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 700);
       });
     }
 
-    // Copy to clipboard
+    // Copy
     const copyBtn = document.getElementById('copyBtn');
     if (copyBtn) {
       copyBtn.addEventListener('click', async () => {
@@ -657,13 +628,11 @@
           await navigator.clipboard.writeText(text);
           copyBtn.style.transform = 'translateY(-2px)';
           setTimeout(() => (copyBtn.style.transform = ''), 200);
-        } catch (e) {
-          alert('Copy failed. Select the text and press Ctrl/Cmd + C.');
-        }
+        } catch { alert('Copy failed. Select the text and press Ctrl/Cmd + C.'); }
       });
     }
 
-    // TXT export (simple, reliable). Can be upgraded to PDF via jsPDF later.
+    // TXT export
     const pdfBtn = document.getElementById('pdfBtn');
     if (pdfBtn) {
       pdfBtn.addEventListener('click', () => {
@@ -671,11 +640,8 @@
         const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
-        a.download = 'ScopeBuilderAI_Proposal.txt';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+        a.href = url; a.download = 'ScopeBuilderAI_Proposal.txt';
+        document.body.appendChild(a); a.click(); a.remove();
         URL.revokeObjectURL(url);
         pdfBtn.style.transform = 'translateY(-2px)';
         setTimeout(() => (pdfBtn.style.transform = ''), 200);
