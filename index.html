@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -27,10 +27,11 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       line-height: 1.6;
-      color: #1f2937;
-      background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+      background: var(--bg, #f8fafc);
+      color: var(--text, #1f2937);
     }
 
+    /* Theme tokens */
     :root {
       --brand-50: #ebf5ff;
       --brand-400: #57a2ff;
@@ -44,6 +45,18 @@
       --shadow: 0 18px 60px rgba(0,0,0,0.12);
       --radius-lg: 20px;
       --splash-min: 2200ms; /* 2.2s minimum hold */
+      --text: #0f172a;
+      --text-muted: #334155;
+      --bg: #f8fafc;
+      --card: rgba(255,255,255,0.92);
+      --border-strong: rgba(226,232,240,0.9);
+    }
+    html[data-theme="dark"] {
+      --text: #e5e7eb;
+      --text-muted: #cbd5e1;
+      --bg: #0b1220;
+      --card: rgba(17,24,39,0.78);
+      --border-strong: rgba(51,65,85,0.6);
     }
 
     /* Layout container */
@@ -56,33 +69,31 @@
 
     /* PREMIUM INTRO SPLASH */
     .splash {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
+      position: fixed; inset: 0; z-index: 9999;
       background:
         radial-gradient(1200px 800px at 20% 10%, rgba(58,139,255,0.08), transparent 60%),
         radial-gradient(1000px 600px at 80% 80%, rgba(72,187,120,0.10), transparent 60%),
         linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
-      display: grid;
-      place-items: center;
+      display: grid; place-items: center;
       transition: opacity .6s ease, visibility .6s ease;
-      opacity: 0; /* start transparent */
-      animation: splash-fade-in 200ms ease forwards; /* 200ms fade-in */
-      visibility: visible;
+      opacity: 0; animation: splash-fade-in 200ms ease forwards; visibility: visible;
+    }
+    html[data-theme="dark"] .splash {
+      background:
+        radial-gradient(1200px 800px at 20% 10%, rgba(58,139,255,0.10), transparent 60%),
+        radial-gradient(1000px 600px at 80% 80%, rgba(72,187,120,0.12), transparent 60%),
+        linear-gradient(135deg, #0b1220 0%, #0b1220 100%);
     }
     .splash.hide { opacity: 0; visibility: hidden; }
     @keyframes splash-fade-in { to { opacity: 1; } }
 
     .splash-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+      background: var(--card);
+      border: 1px solid var(--border-strong);
       box-shadow: var(--shadow);
       border-radius: 24px;
       padding: 28px 32px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
       transform: translateY(6px);
       animation: splash-in .7s cubic-bezier(.2,.8,.2,1) both;
       backdrop-filter: blur(10px);
@@ -95,10 +106,8 @@
     /* Logo scale-in + glow pulse */
     .splash-logo {
       width: clamp(140px, 18vw, 220px);
-      height: auto;
-      display: block;
-      transform: scale(0.96);
-      opacity: 0;
+      height: auto; display: block;
+      transform: scale(0.96); opacity: 0;
       animation:
         logo-in 600ms cubic-bezier(.2,.8,.2,1) 120ms forwards,
         logo-glow 2400ms ease-in-out 800ms infinite;
@@ -112,150 +121,107 @@
       50% { filter: drop-shadow(0 16px 42px rgba(58,139,255,0.30)); }
     }
 
-    /* Splash title with letter-by-letter reveal (JS wraps .char spans) */
+    /* Splash title with letter-by-letter reveal */
     .splash-title {
-      margin: 2px 0 0;
-      font-weight: 900;
-      letter-spacing: .3px;
-      font-size: clamp(18px, 2.2vw, 22px);
-      color: var(--brand-900);
-      text-align: center;
-      display: inline-block;
-      white-space: nowrap;
+      margin: 2px 0 0; font-weight: 900; letter-spacing: .3px;
+      font-size: clamp(18px, 2.2vw, 22px); color: var(--text);
+      text-align: center; display: inline-block; white-space: nowrap;
     }
     .splash-title .char {
-      display: inline-block;
-      transform: translateY(6px);
-      opacity: 0;
+      display: inline-block; transform: translateY(6px); opacity: 0;
       animation: char-in 520ms cubic-bezier(.2,.8,.2,1) forwards;
     }
     @keyframes char-in {
       0% { transform: translateY(6px); opacity: 0; }
       100% { transform: translateY(0); opacity: 1; }
     }
-
-    .splash-sub {
-      margin: 0;
-      font-size: 14px;
-      color: #64748b;
-      text-align: center;
-      font-weight: 700;
-    }
-
-    .loader-ring {
-      width: 44px; height: 44px;
-      border: 3px solid #e2e8f0;
-      border-top-color: var(--brand-500);
-      border-radius: 50%;
-      animation: spin .9s linear infinite;
-      margin-top: 6px;
-    }
+    .splash-sub { margin: 0; font-size: 14px; color: var(--text-muted); text-align: center; font-weight: 700; }
+    .loader-ring { width: 44px; height: 44px; border: 3px solid #e2e8f0; border-top-color: var(--brand-500); border-radius: 50%; animation: spin .9s linear infinite; margin-top: 6px; }
     @keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+    .splash-progress { width: 180px; height: 6px; border-radius: 999px; background: #e5e7eb; overflow: hidden; position: relative; margin-top: 2px; }
+    .splash-progress::after { content: ''; position: absolute; inset: 0; width: 40%; background: linear-gradient(90deg, var(--brand-400), var(--brand-600)); animation: bar 1.4s ease-in-out infinite; border-radius: inherit; }
+    @keyframes bar { 0% { transform: translateX(-60%);} 50% { transform: translateX(20%);} 100% { transform: translateX(120%);} }
 
-    .splash-progress {
-      width: 180px; height: 6px;
-      border-radius: 999px;
-      background: #e5e7eb;
-      overflow: hidden;
-      position: relative;
-      margin-top: 2px;
-    }
-    .splash-progress::after {
-      content: '';
-      position: absolute; inset: 0;
-      width: 40%;
-      background: linear-gradient(90deg, var(--brand-400), var(--brand-600));
-      animation: bar 1.4s ease-in-out infinite;
-      border-radius: inherit;
-    }
-    @keyframes bar {
-      0% { transform: translateX(-60%); }
-      50% { transform: translateX(20%); }
-      100% { transform: translateX(120%); }
-    }
-
-    /* Header card and strong typography */
+    /* Header + actions */
     header.app-header {
-      text-align: center;
-      padding: 28px 20px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-      margin: 18px 0 28px;
+      text-align: center; padding: 28px 20px;
+      background: var(--card); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow);
+      position: relative; overflow: hidden; margin: 18px 0 28px;
     }
     header.app-header::before {
-      content: '';
-      position: absolute; inset: 0;
+      content: ''; position: absolute; inset: 0;
       background:
         radial-gradient(600px 200px at 50% 0%, rgba(58,139,255,0.10), transparent 60%),
         linear-gradient(90deg, rgba(58,139,255,0.05), rgba(72,187,120,0.05));
       pointer-events: none;
     }
     .title {
-      margin: 0 0 8px;
-      font-weight: 900;
+      margin: 0 0 8px; font-weight: 900;
       font-size: clamp(22px, 3vw, 28px);
       background: linear-gradient(135deg, var(--brand-700), var(--brand-500));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: .2px;
+      -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: .2px;
     }
-    .tagline {
-      margin: 0 auto 14px;
-      max-width: 680px;
-      color: #475569;
-      font-size: clamp(14px, 1.8vw, 15px);
-      padding-inline: 10px;
-      font-weight: 700;
-    }
+    .tagline { margin: 0 auto 14px; max-width: 680px; color: var(--text-muted); font-size: clamp(14px, 1.8vw, 15px); padding-inline: 10px; font-weight: 700; }
+
+    .header-actions { display: inline-flex; gap: 10px; align-items: center; justify-content: center; margin-top: 10px; }
     .lang-select {
-      appearance: none;
-      padding: 10px 40px 10px 14px;
-      border-radius: 999px;
-      border: 1.5px solid #e2e8f0;
-      background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%236b7280' stroke-linecap='round' stroke-linejoin' stroke-width='1.6' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") no-repeat right 12px center / 18px;
-      color: #334155;
-      font-weight: 800;
-      cursor: pointer;
-      transition: border-color .25s ease, transform .2s ease, box-shadow .25s ease;
+      appearance: none; padding: 10px 40px 10px 14px; border-radius: 999px; border: 1.5px solid var(--border-strong);
+      background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.6' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") no-repeat right 12px center / 18px;
+      color: #334155; font-weight: 800; cursor: pointer; transition: border-color .25s ease, transform .2s ease, box-shadow .25s ease;
     }
+    html[data-theme="dark"] .lang-select { background: #0f172a; color: #e5e7eb; border-color: #334155; }
     .lang-select:hover { transform: translateY(-1px); border-color: var(--brand-400); box-shadow: 0 6px 20px rgba(58,139,255,0.18); }
     .lang-select:focus { outline: none; border-color: var(--brand-500); box-shadow: 0 0 0 4px rgba(58,139,255,0.15); }
 
+    /* Theme toggle switch */
+    .theme-toggle {
+      appearance: none; width: 50px; height: 28px; border-radius: 999px;
+      background: #e2e8f0; position: relative; cursor: pointer; border: 1px solid var(--border-strong);
+      transition: background .2s ease, border-color .2s ease;
+    }
+    .theme-toggle::after {
+      content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%;
+      background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: transform .2s ease;
+    }
+    .theme-toggle[data-mode="dark"] { background: #334155; }
+    .theme-toggle[data-mode="dark"]::after { transform: translateX(22px); }
+    .theme-icon { font-size: 14px; color: var(--text-muted); font-weight: 800; }
+
     /* Cards */
     .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      padding: clamp(22px, 2.2vw, 36px);
-      margin: 22px 0 28px;
+      background: var(--card); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow);
+      padding: clamp(22px, 2.2vw, 36px); margin: 22px 0 28px;
     }
 
-    /* Currency input group */
+    /* Form typography upgrades */
+    #formTitle { font-size: 22px !important; font-weight: 900 !important; letter-spacing: .2px; color: var(--text); }
+    label { font-size: 14px !important; font-weight: 900 !important; color: var(--text-muted); }
+
     .input-row { display: grid; grid-template-columns: 140px 1fr; gap: 10px; }
     @media (max-width: 560px) { .input-row { grid-template-columns: 1fr; } }
     .currency-select {
-      padding: 12px 12px;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 12px;
-      background: #fff;
-      font-weight: 800;
-      color: #334155;
+      padding: 12px 12px; border: 1.5px solid var(--border-strong);
+      border-radius: 12px; background: #fff; font-weight: 800; color: #334155;
     }
-    .money-input {
-      padding: 14px 16px;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 12px;
-      background: #fff;
-      font-weight: 800;
-      width: 100%;
+    html[data-theme="dark"] .currency-select { background: #0f172a; color: #e5e7eb; border-color: #334155; }
+    .money-input, #clientName, #brief, #deadline, #vertical {
+      padding: 14px 16px; border: 1.5px solid var(--border-strong); border-radius: 12px; background: #fff; font-weight: 800; color: var(--text);
     }
-    .budget-note { margin-top: 6px; font-size: 12px; color: #475569; }
+    html[data-theme="dark"] .money-input,
+    html[data-theme="dark"] #clientName,
+    html[data-theme="dark"] #brief,
+    html[data-theme="dark"] #deadline,
+    html[data-theme="dark"] #vertical { background: #0f172a; color: #e5e7eb; border-color: #334155; }
+    #clientName { font-size: 16px !important; }
+    #clientName::placeholder { font-size: 16px; font-weight: 900; }
+    #brief { font-size: 16px !important; line-height: 1.7; }
+    #brief::placeholder { font-size: 15px; font-weight: 800; }
+    .budget-note { margin-top: 6px; font-size: 12px; color: var(--text-muted); }
+
+    #preview #proposalContent { color: var(--text); font-weight: 700; }
+    #generateBtn, #copyBtn, #pdfBtn { font-size: 15px; font-weight: 900; }
 
     /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
@@ -282,45 +248,41 @@
     <header class="app-header">
       <h1 class="title">ScopeBuilderAI</h1>
       <p class="tagline">Generate professional proposals in minutes for Web Development and Content Writing.</p>
-      <select id="langToggle" class="lang-select" aria-label="Language Selection">
-        <option value="en">🇺🇸 English</option>
-        <option value="hi">🇮🇳 हिंदी</option>
-      </select>
+      <div class="header-actions" aria-label="Header controls">
+        <span class="theme-icon" aria-hidden="true">☀️</span>
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme" data-mode="light"></button>
+        <span class="theme-icon" aria-hidden="true">🌙</span>
+
+        <select id="langToggle" class="lang-select" aria-label="Language Selection">
+          <option value="en">🇺🇸 English</option>
+          <option value="hi">🇮🇳 हिंदी</option>
+        </select>
+      </div>
     </header>
-      <!-- Form Section -->
+        <!-- Form Section -->
     <section class="card" id="formSection" aria-labelledby="formTitle">
-      <h2 id="formTitle" style="margin-top:0;font-size:20px;font-weight:900;color:#0f172a;">
-        Create New Proposal
-      </h2>
+      <h2 id="formTitle">Create New Proposal</h2>
 
       <form id="proposalForm" novalidate>
         <div class="form-group" style="margin-bottom:18px;">
-          <label for="clientName" style="display:block;font-weight:800;font-size:13px;color:#334155;margin-bottom:6px;">
-            Client Name *
-          </label>
-          <input type="text" id="clientName" placeholder="e.g., ABC Marketing Agency" required
-                 style="width:100%;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);font-weight:700;" />
+          <label for="clientName">Client Name *</label>
+          <input type="text" id="clientName" placeholder="e.g., ABC Marketing Agency" required />
           <div class="error-message" id="clientNameError" style="display:none;color:#dc2626;font-size:12px;margin-top:6px;">
             Please enter the client name
           </div>
         </div>
 
         <div class="form-group" style="margin-bottom:18px;">
-          <label for="brief" style="display:block;font-weight:800;font-size:13px;color:#334155;margin-bottom:6px;">
-            Project Brief *
-          </label>
+          <label for="brief">Project Brief *</label>
           <textarea id="brief" required
-                    placeholder="Describe the project requirements, goals, target audience, and key deliverables..."
-                    style="width:100%;min-height:120px;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);font-weight:700;"></textarea>
+                    placeholder="Describe the project requirements, goals, target audience, and key deliverables..."></textarea>
           <div class="error-message" id="briefError" style="display:none;color:#dc2626;font-size:12px;margin-top:6px;">
             Please provide project details (minimum 20 characters)
           </div>
         </div>
 
         <div class="form-group" style="margin-bottom:18px;">
-          <label for="budget" style="display:block;font-weight:800;font-size:13px;color:#334155;margin-bottom:6px;">
-            Estimated Budget
-          </label>
+          <label for="budget">Estimated Budget</label>
           <div class="input-row">
             <select id="currency" class="currency-select" aria-label="Currency">
               <option value="INR" selected>INR ₹</option>
@@ -333,19 +295,13 @@
         </div>
 
         <div class="form-group" style="margin-bottom:18px;">
-          <label for="deadline" style="display:block;font-weight:800;font-size:13px;color:#334155;margin-bottom:6px;">
-            Preferred Deadline
-          </label>
-          <input type="date" id="deadline"
-                 style="width:100%;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);font-weight:700;" />
+          <label for="deadline">Preferred Deadline</label>
+          <input type="date" id="deadline" />
         </div>
 
         <div class="form-group" style="margin-bottom:22px;">
-          <label for="vertical" style="display:block;font-weight:800;font-size:13px;color:#334155;margin-bottom:6px;">
-            Service Type *
-          </label>
-          <select id="vertical" required
-                  style="width:100%;padding:14px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.03);font-weight:700;">
+          <label for="vertical">Service Type *</label>
+          <select id="vertical" required>
             <option value="">Select Service Type</option>
             <option value="web">🌐 Web Development</option>
             <option value="content">✍️ Content Writing</option>
@@ -355,11 +311,7 @@
           </div>
         </div>
 
-        <button type="button" id="generateBtn"
-                style="width:100%;padding:16px 18px;border:none;border-radius:12px;
-                       font-weight:900;letter-spacing:.3px;color:#fff;
-                       background:linear-gradient(135deg, var(--brand-600), var(--brand-500));cursor:pointer;
-                       box-shadow:0 10px 28px rgba(58,139,255,0.25);transition:transform .18s ease, box-shadow .2s ease;">
+        <button type="button" id="generateBtn">
           🚀 Generate Professional Proposal
         </button>
 
@@ -372,7 +324,7 @@
 
     <!-- Preview Section -->
     <section id="preview" class="card" aria-labelledby="previewTitle" style="display:none;border-top:5px solid var(--brand-500);">
-      <div class="preview-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #e2e8f0;">
+      <div class="preview-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-strong);">
         <h2 id="previewTitle" style="margin:0;font-size:22px;font-weight:900;background:linear-gradient(135deg,var(--brand-700),var(--brand-500));-webkit-background-clip:text;background-clip:text;color:transparent;">
           Your Professional Proposal
         </h2>
@@ -380,27 +332,25 @@
           Ready to Review
         </span>
       </div>
-      <div id="proposalContent" style="color:#111827;font-size:15px;line-height:1.65;font-weight:600;">
+      <div id="proposalContent" style="font-size:15px;line-height:1.65;">
         <!-- Dynamic proposal content will be inserted here -->
       </div>
     </section>
 
     <!-- Export Section -->
     <section class="card" id="exportSection" aria-labelledby="exportTitle" style="display:none;">
-      <h3 id="exportTitle" style="margin-top:0;color:#0f172a;font-size:18px;font-weight:900;">Ready to Share Your Proposal?</h3>
-      <p style="color:#475569;margin:8px 0 18px;font-size:14px;font-weight:700;">Export your customized proposal in professional formats</p>
+      <h3 id="exportTitle" style="margin-top:0;">Ready to Share Your Proposal?</h3>
+      <p style="color:var(--text-muted);margin:8px 0 18px;font-size:14px;font-weight:700;">Export your customized proposal in professional formats</p>
       <div class="export-buttons" style="display:flex;gap:14px;flex-wrap:wrap;">
         <button id="copyBtn"
                 style="flex:1 1 240px;min-width:220px;display:inline-flex;align-items:center;justify-content:center;gap:10px;
-                       padding:14px 22px;border-radius:999px;border:1.5px solid #e2e8f0;background:#fff;color:var(--brand-700);
-                       font-weight:900;cursor:pointer;transition:transform .18s ease, box-shadow .2s ease;">
+                       padding:14px 22px;border-radius:999px;border:1.5px solid var(--border-strong);background:#fff;color:var(--brand-700);">
           <span>📋</span><span>Copy to Clipboard (Google Docs)</span>
         </button>
         <button id="pdfBtn"
                 style="flex:1 1 240px;min-width:220px;display:inline-flex;align-items:center;justify-content:center;gap:10px;
                        padding:14px 22px;border-radius:999px;border:none;background:linear-gradient(135deg,#48bb78,#38a169);
-                       color:#fff;font-weight:900;cursor:pointer;box-shadow:0 10px 28px rgba(72,187,120,0.25);
-                       transition:transform .18s ease, box-shadow .2s ease;">
+                       color:#fff;">
           <span>📄</span><span>Download PDF (Client Ready)</span>
         </button>
       </div>
@@ -413,7 +363,7 @@
 
     <!-- Footer -->
     <footer class="card" aria-label="Footer" style="text-align:center;">
-      <p style="margin:0 0 6px;color:#64748b;font-size:13px;font-weight:700;">
+      <p style="margin:0 0 6px;color:var(--text-muted);font-size:13px;font-weight:700;">
         This AI-generated proposal is a professional starting point. Please review and customize with your specific branding, pricing details, and legal terms.
       </p>
       <p style="margin:0;color:#94a3b8;font-size:12px;font-weight:700;">
@@ -469,6 +419,32 @@
       }, 8000);
     })();
 
+    // Theme persistence and toggle
+    (function() {
+      const key = 'sbai-theme';
+      const html = document.documentElement;
+      const btn = document.getElementById('themeToggle');
+
+      function apply(mode) {
+        html.setAttribute('data-theme', mode);
+        if (btn) btn.setAttribute('data-mode', mode);
+        try { localStorage.setItem(key, mode); } catch {}
+      }
+      const saved = (function(){ try { return localStorage.getItem(key); } catch { return null; } })();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initial = saved || (prefersDark ? 'dark' : 'light');
+      apply(initial);
+      btn?.addEventListener('click', () => {
+        const mode = (html.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
+        apply(mode);
+      });
+      if (!saved && window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+          apply(e.matches ? 'dark' : 'light');
+        });
+      }
+    })();
+
     // Translations (UI labels only)
     const translations = {
       en: {
@@ -520,7 +496,6 @@
     const currencySelect = document.getElementById('currency');
     const budgetInput = document.getElementById('budget');
     const budgetNote = document.getElementById('budgetNote');
-
     const currencyLocales = { INR: 'en-IN', USD: 'en-US', EUR: 'de-DE' };
 
     function formatMoney(value, ccy) {
@@ -559,7 +534,7 @@
     function generateScope(service) {
       if (service === 'web') {
         return `
-          <h3 style="margin:18px 0 8px;color:#1f2937;">Scope of Work</h3>
+          <h3 style="margin:18px 0 8px;">Scope of Work</h3>
           <ul style="margin:0;padding-left:18px;">
             <li>Discovery, requirements, and IA</li>
             <li>UI/UX wireframes and high-fidelity design</li>
@@ -571,7 +546,7 @@
         `;
       }
       return `
-        <h3 style="margin:18px 0 8px;color:#1f2937;">Scope of Work</h3>
+        <h3 style="margin:18px 0 8px;">Scope of Work</h3>
         <ul style="margin:0;padding-left:18px;">
           <li>Content outline and tone alignment</li>
           <li>Drafting with research and SEO basics</li>
@@ -583,7 +558,7 @@
 
     function generateMilestones(service) {
       return `
-        <h3 style="margin:18px 0 8px;color:#1f2937;">Project Milestones & Timeline</h3>
+        <h3 style="margin:18px 0 8px;">Project Milestones & Timeline</h3>
         <ol style="margin:0;padding-left:18px;">
           <li>Kickoff & Discovery — Week 1</li>
           <li>${service === 'web' ? 'Design & Frontend' : 'Drafting & Review'} — Weeks 2–3</li>
@@ -595,7 +570,7 @@
 
     function injectBudgetNoteIntoPreview(budgetVal, ccy) {
       const formatted = formatMoney(Number(budgetVal || 0), ccy);
-      return `<p style="margin-top:8px;color:#475569;">Approx. client budget noted: <strong>${formatted}</strong></p>`;
+      return `<p style="margin-top:8px;color:var(--text-muted);">Approx. client budget noted: <strong>${formatted}</strong></p>`;
     }
 
     function generatePricing(budget, service, ccy) {
@@ -619,7 +594,7 @@
       }
       const note = budget ? injectBudgetNoteIntoPreview(budget, ccy) : '';
       return `
-        <h3 style="margin:18px 0 8px;color:#1f2937;">Investment Options</h3>
+        <h3 style="margin:18px 0 8px;">Investment Options</h3>
         ${tiers}
         ${note}
       `;
@@ -627,7 +602,7 @@
 
     function generateNextSteps() {
       return `
-        <h3 style="margin:18px 0 8px;color:#1f2937;">Next Steps</h3>
+        <h3 style="margin:18px 0 8px;">Next Steps</h3>
         <ul style="margin:0;padding-left:18px;">
           <li>Confirm scope and timeline</li>
           <li>Sign-off and advance to start</li>
