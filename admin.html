@@ -135,11 +135,34 @@
     </div>
   </div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js"></script>
+ <!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+<!-- Initialize Firebase (must be right after SDKs) -->
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDadaImEVf-rdcEPlza_UR3Kp--52wQbhI",
+    authDomain: "scopebuilderai.firebaseapp.com",
+    projectId: "scopebuilderai",
+    storageBucket: "scopebuilderai.firebasestorage.app",
+    messagingSenderId: "471021428025",
+    appId: "1:471021428025:web:8246535fe30b2854701ce8"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+</script>
+
+<!-- Your app code that uses auth/db/storage goes after this -->
+<script>
+  // Example: onAuthStateChanged, login handler, save functions...
+</script>
+
+
 
   <script>
     // Your Firebase config (inserted)
