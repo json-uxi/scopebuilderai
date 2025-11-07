@@ -6,58 +6,39 @@
   <title>ScopeBuilderAI — White-Label Admin</title>
   <meta name="description" content="Customize your white-label proposal generator branding and settings." />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  
   <style>
     *, *::before, *::after { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; font-family: 'Inter', system-ui, sans-serif; }
-    body { background: #f8fafc; color: #0f172a; }
-    
+    html, body { height: 100%; margin: 0; font-family: 'Inter', system-ui, sans-serif; background:#f8fafc; color:#0f172a; }
+    .auth-container { max-width: 420px; margin: 60px auto; padding: 32px; background:#fff; border-radius:16px; box-shadow: 0 12px 44px rgba(0,0,0,0.08); }
+    .auth-container h2 { margin: 0 0 18px; font-size: 24px; font-weight: 900; color:#1e3a8a; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display:block; font-weight:800; font-size:13px; color:#334155; margin-bottom:6px; }
+    .form-group input { width:100%; padding:12px; border:1.5px solid #e2e8f0; border-radius:8px; font-size:14px; font-weight:700; }
+    .form-group input:focus { outline:none; border-color:#1e3a8a; box-shadow:0 0 0 3px rgba(30,58,138,0.1); }
+    .auth-btn { width:100%; padding:12px; background:#1e3a8a; color:#fff; border:none; border-radius:8px; font-weight:900; cursor:pointer; font-size:14px; }
+    .auth-btn:hover { filter:brightness(1.08); }
+    .auth-error { color:#dc2626; font-size:13px; margin-top:10px; min-height:18px; }
     .admin-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; }
-    .admin-header h1 { margin: 0; font-size: 28px; font-weight: 900; color: #1e3a8a; }
-    .logout-btn { padding: 10px 20px; background: #dc2626; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 800; }
-    .logout-btn:hover { background: #b91c1c; }
-
-    .auth-container { max-width: 400px; margin: 60px auto; padding: 40px; background: #fff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-    .auth-container h2 { margin: 0 0 20px; font-size: 24px; font-weight: 900; color: #1e3a8a; }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-weight: 800; font-size: 14px; color: #334155; margin-bottom: 6px; }
-    .form-group input { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 14px; font-weight: 700; }
-    .form-group input:focus { outline: none; border-color: #1e3a8a; box-shadow: 0 0 0 3px rgba(30,58,138,0.1); }
-    .auth-btn { width: 100%; padding: 12px; background: #1e3a8a; color: #fff; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 14px; }
-    .auth-btn:hover { background: #1e3a8a; filter: brightness(1.1); }
-    .auth-error { color: #dc2626; font-size: 13px; margin-top: 10px; }
-
-    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .admin-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; }
-    .admin-card h3 { margin: 0 0 16px; font-size: 18px; font-weight: 900; color: #0f172a; }
-    .admin-card p { margin: 0 0 16px; color: #64748b; font-size: 14px; line-height: 1.5; }
-
-    .color-picker-group { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
-    .color-picker-group label { margin: 0; width: 100px; font-weight: 800; font-size: 13px; color: #334155; }
-    .color-picker-group input[type="color"] { width: 60px; height: 40px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; }
-
-    .logo-upload { display: flex; gap: 12px; align-items: flex-start; }
-    .logo-upload input[type="file"] { padding: 8px; font-size: 13px; }
-    .logo-preview { width: 80px; height: 80px; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; overflow: hidden; }
-    .logo-preview img { max-width: 100%; max-height: 100%; }
-
-    .save-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 15px; }
-    .save-btn:hover { filter: brightness(1.05); }
-    .save-message { margin-top: 12px; padding: 12px; border-radius: 8px; text-align: center; font-weight: 800; font-size: 13px; }
-    .save-success { background: #dcfce7; color: #166534; display: none; }
-    .save-error { background: #fee2e2; color: #991b1b; display: none; }
-
-    #loading { display: none; text-align: center; padding: 40px; }
-    #loading p { color: #64748b; font-weight: 700; }
-
-    @media (max-width: 768px) {
-      .admin-grid { grid-template-columns: 1fr; }
-    }
+    .admin-header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; padding-bottom: 16px; border-bottom:1px solid #e2e8f0; }
+    .admin-header h1 { margin:0; font-size:26px; font-weight:900; color:#1e3a8a; }
+    .logout-btn { padding:10px 16px; background:#dc2626; color:#fff; border:none; border-radius:8px; font-weight:800; cursor:pointer; }
+    .admin-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .admin-card { background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; }
+    .admin-card h3 { margin:0 0 12px; font-size:18px; font-weight:900; }
+    .color-picker-group { display:flex; gap:12px; align-items:center; margin-bottom:10px; }
+    .logo-upload { display:flex; gap:12px; align-items:flex-start; margin-bottom: 10px; }
+    .logo-preview { width:80px; height:80px; border:1px solid #e2e8f0; border-radius:8px; background:#f1f5f9; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .logo-preview img { max-width:100%; max-height:100%; }
+    .save-btn { width:100%; padding:12px; background: linear-gradient(135deg,#1e3a8a,#2563eb); color:#fff; border:none; border-radius:8px; font-weight:900; cursor:pointer; font-size:14px; }
+    .save-message { margin-top:10px; padding:10px; border-radius:8px; text-align:center; font-weight:800; font-size:13px; display:none; }
+    .save-success { background:#dcfce7; color:#166534; }
+    .save-error { background:#fee2e2; color:#991b1b; }
+    @media (max-width: 900px) { .admin-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-  <!-- Auth Section (hidden once logged in) -->
+
+  <!-- Auth -->
   <div id="authSection" class="auth-container">
     <h2>White-Label Admin</h2>
     <form id="loginForm">
@@ -72,13 +53,13 @@
       <button type="submit" class="auth-btn">Sign In</button>
       <div id="authError" class="auth-error"></div>
     </form>
-    <p style="text-align: center; margin-top: 16px; font-size: 13px; color: #64748b;">
-      New agency? <a href="#" onclick="toggleSignUp()" style="color: #1e3a8a; text-decoration: none; font-weight: 800;">Create Account</a>
+    <p style="text-align:center; margin-top:12px; font-size:13px; color:#64748b;">
+      New agency? <a href="#" onclick="toggleSignUp()" style="color:#1e3a8a; font-weight:800; text-decoration:none;">Create Account</a>
     </p>
   </div>
 
-  <!-- Admin Dashboard (hidden until logged in) -->
-  <div id="adminDashboard" style="display: none;">
+  <!-- Dashboard -->
+  <div id="adminDashboard" style="display:none;">
     <div class="admin-container">
       <div class="admin-header">
         <h1>Customize Your Branding</h1>
@@ -86,42 +67,34 @@
       </div>
 
       <div class="admin-grid">
-        <!-- Branding Card -->
+        <!-- Branding -->
         <div class="admin-card">
           <h3>🎨 Branding</h3>
-          <p>Customize your logo, colors, and site title.</p>
-
-          <div style="margin-bottom: 20px;">
-            <label style="font-weight: 800; font-size: 13px; color: #334155; display: block; margin-bottom: 8px;">Logo (PNG/JPG)</label>
-            <div class="logo-upload">
-              <input type="file" id="logoFile" accept="image/png,image/jpeg" onchange="previewLogo()" />
-              <div class="logo-preview" id="logoPreview">
-                <img id="logoImg" src="" alt="Logo" style="display: none;" />
-                <span id="logoPlaceholder" style="color: #94a3b8; font-size: 12px;">No logo</span>
-              </div>
+          <div class="logo-upload">
+            <input type="file" id="logoFile" accept="image/png,image/jpeg" onchange="previewLogo()" />
+            <div class="logo-preview">
+              <img id="logoImg" src="" alt="Logo" style="display:none;" />
+              <span id="logoPlaceholder" style="color:#94a3b8; font-size:12px;">No logo</span>
             </div>
           </div>
 
-          <div style="margin-bottom: 16px;">
-            <label style="font-weight: 800; font-size: 13px; color: #334155; display: block; margin-bottom: 8px;">Site Title</label>
-            <input type="text" id="siteTitle" placeholder="e.g., Your Agency Proposals" value="ScopeBuilderAI" style="width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-weight: 700;" />
+          <div class="form-group">
+            <label>Site Title</label>
+            <input type="text" id="siteTitle" placeholder="Your Agency Proposals" value="ScopeBuilderAI" />
           </div>
 
-          <div style="margin-bottom: 16px;">
-            <label style="font-weight: 800; font-size: 13px; color: #334155; display: block; margin-bottom: 8px;">Tagline</label>
-            <input type="text" id="tagline" placeholder="Your tagline here" value="Professional Proposal Generator" style="width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-weight: 700;" />
+          <div class="form-group">
+            <label>Tagline</label>
+            <input type="text" id="tagline" placeholder="Professional Proposal Generator" value="Professional Proposal Generator" />
           </div>
 
-          <div style="margin-bottom: 16px;">
-            <label style="font-weight: 800; font-size: 13px; color: #334155; margin-bottom: 12px; display: block;">Brand Colors</label>
-            <div class="color-picker-group">
-              <label>Primary</label>
-              <input type="color" id="primaryColor" value="#1e3a8a" />
-            </div>
-            <div class="color-picker-group">
-              <label>Secondary</label>
-              <input type="color" id="secondaryColor" value="#3a8bff" />
-            </div>
+          <div class="color-picker-group">
+            <label style="width:100px; font-weight:800; font-size:13px; color:#334155;">Primary</label>
+            <input type="color" id="primaryColor" value="#1e3a8a" />
+          </div>
+          <div class="color-picker-group">
+            <label style="width:100px; font-weight:800; font-size:13px; color:#334155;">Secondary</label>
+            <input type="color" id="secondaryColor" value="#3a8bff" />
           </div>
 
           <button class="save-btn" onclick="saveBranding()">Save Branding</button>
@@ -129,30 +102,20 @@
           <div class="save-message save-error" id="brandingError">✗ Error saving branding</div>
         </div>
 
-        <!-- Settings Card -->
+        <!-- Settings -->
         <div class="admin-card">
           <h3>⚙️ Settings</h3>
-          <p>Configure your custom domain, billing, and more.</p>
-
-          <div style="margin-bottom: 16px;">
-            <label style="font-weight: 800; font-size: 13px; color: #334155; display: block; margin-bottom: 8px;">Custom Domain (Optional)</label>
-            <input type="text" id="customDomain" placeholder="e.g., proposals.youragency.com" style="width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-weight: 700;" />
-            <small style="color: #64748b; font-size: 12px; margin-top: 6px; display: block;">Leave blank to use default: youragency.scopebuilder.app</small>
+          <div class="form-group">
+            <label>Custom Domain (optional)</label>
+            <input type="text" id="customDomain" placeholder="proposals.youragency.com" />
           </div>
-
-          <div style="margin-bottom: 16px;">
-            <label style="font-weight: 800; font-size: 13px; color: #334155; display: block; margin-bottom: 8px;">Agency Name</label>
-            <input type="text" id="agencyName" placeholder="Your Agency Name" style="width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-weight: 700;" />
+          <div class="form-group">
+            <label>Agency Name</label>
+            <input type="text" id="agencyName" placeholder="Your Agency Name" />
           </div>
-
-          <div style="margin-bottom: 16px;">
-            <label style="font-weight: 800; font-size: 13px; color: #334155; display: block; margin-bottom: 8px;">Email</label>
-            <input type="email" id="adminEmail" readonly style="width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-weight: 700; background: #f1f5f9; color: #64748b;" />
-          </div>
-
-          <div style="margin-bottom: 16px;">
-            <label style="font-weight: 800; font-size: 13px; color: #334155; display: block; margin-bottom: 8px;">Plan</label>
-            <p style="margin: 0; padding: 10px; background: #f1f5f9; border-radius: 8px; color: #334155; font-weight: 800;">White-Label Pro — $349/month</p>
+          <div class="form-group">
+            <label>Plan</label>
+            <p style="margin:0; padding:10px; background:#f1f5f9; border-radius:8px; color:#334155; font-weight:800;">White-Label Pro — $349/month</p>
           </div>
 
           <button class="save-btn" onclick="saveSettings()">Save Settings</button>
@@ -161,42 +124,35 @@
         </div>
       </div>
 
-      <!-- Preview Section -->
-      <div class="admin-card" style="margin-top: 24px;">
+      <!-- Preview -->
+      <div class="admin-card" style="margin-top: 20px;">
         <h3>👁️ Preview</h3>
-        <p style="margin-bottom: 20px;">This is how your clients will see your proposal tool:</p>
-        <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; background: #f8fafc; text-align: center;">
-          <h2 id="previewTitle" style="margin: 0 0 8px; font-size: 24px; font-weight: 900; color: #1e3a8a;">ScopeBuilderAI</h2>
-          <p id="previewTagline" style="margin: 0; color: #64748b; font-weight: 700;">Professional Proposal Generator</p>
-          <div style="margin-top: 16px; padding: 12px; background: #fff; border-radius: 6px; font-size: 13px; color: #64748b; font-weight: 700;">
-            Logo will appear here (if uploaded)
-          </div>
+        <div style="border:1px solid #e2e8f0; border-radius:8px; padding:16px; background:#f8fafc; text-align:center;">
+          <h2 id="previewTitle" style="margin:0 0 6px; font-size:22px; font-weight:900; color:#1e3a8a;">ScopeBuilderAI</h2>
+          <p id="previewTagline" style="margin:0; color:#64748b; font-weight:700;">Professional Proposal Generator</p>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="loading">
-    <p>Loading...</p>
-  </div>
-
-  <!-- Firebase SDK -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js"></script>
 
   <script>
-    // Firebase config - REPLACE WITH YOUR CONFIG
+    // Your Firebase config (inserted)
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "your-app.firebaseapp.com",
-      projectId: "your-app",
-      storageBucket: "your-app.appspot.com",
-      messagingSenderId: "YOUR_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyDadaImEVf-rdcEPlza_UR3Kp--52wQbhI",
+      authDomain: "scopebuilderai.firebaseapp.com",
+      projectId: "scopebuilderai",
+      storageBucket: "scopebuilderai.firebasestorage.app",
+      messagingSenderId: "471021428025",
+      appId: "1:471021428025:web:8246535fe30b2854701ce8"
     };
 
+    // Init
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -205,15 +161,13 @@
     let currentUser = null;
     let currentAgencyId = null;
 
-    // Check auth state on load
-    auth.onAuthStateChanged(user => {
+    auth.onAuthStateChanged(async (user) => {
       if (user) {
         currentUser = user;
         currentAgencyId = user.uid;
         document.getElementById('authSection').style.display = 'none';
         document.getElementById('adminDashboard').style.display = 'block';
-        document.getElementById('adminEmail').value = user.email;
-        loadAgencyData();
+        await loadAgencyData();
       } else {
         document.getElementById('authSection').style.display = 'block';
         document.getElementById('adminDashboard').style.display = 'none';
@@ -223,102 +177,97 @@
     // Login
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
       try {
         await auth.signInWithEmailAndPassword(email, password);
-      } catch (error) {
-        document.getElementById('authError').textContent = 'Login failed: ' + error.message;
+        document.getElementById('authError').textContent = '';
+      } catch (err) {
+        document.getElementById('authError').textContent = err.message;
       }
     });
 
-    // Logout
-    async function logout() {
-      await auth.signOut();
-      currentUser = null;
-      currentAgencyId = null;
-    }
+    async function logout() { await auth.signOut(); }
 
-    // Load agency data
+    // Load agency doc
     async function loadAgencyData() {
-      const docSnap = await db.collection('agencies').doc(currentAgencyId).get();
-      if (docSnap.exists) {
-        const data = docSnap.data();
-        document.getElementById('siteTitle').value = data.siteTitle || 'ScopeBuilderAI';
-        document.getElementById('tagline').value = data.tagline || 'Professional Proposal Generator';
-        document.getElementById('primaryColor').value = data.primaryColor || '#1e3a8a';
-        document.getElementById('secondaryColor').value = data.secondaryColor || '#3a8bff';
-        document.getElementById('agencyName').value = data.agencyName || '';
-        document.getElementById('customDomain').value = data.customDomain || '';
-        updatePreview();
-        if (data.logoUrl) {
-          document.getElementById('logoImg').src = data.logoUrl;
-          document.getElementById('logoImg').style.display = 'block';
-          document.getElementById('logoPlaceholder').style.display = 'none';
+      try {
+        const snap = await db.collection('agencies').doc(currentAgencyId).get();
+        if (snap.exists) {
+          const d = snap.data();
+          setVal('siteTitle', d.siteTitle || 'ScopeBuilderAI');
+          setVal('tagline', d.tagline || 'Professional Proposal Generator');
+          setVal('primaryColor', d.primaryColor || '#1e3a8a');
+          setVal('secondaryColor', d.secondaryColor || '#3a8bff');
+          setVal('agencyName', d.agencyName || '');
+          setVal('customDomain', d.customDomain || '');
+          if (d.logoUrl) {
+            const img = document.getElementById('logoImg');
+            img.src = d.logoUrl; img.style.display = 'block';
+            document.getElementById('logoPlaceholder').style.display = 'none';
+          }
+          updatePreview();
+        } else {
+          // create an empty doc so updates succeed
+          await db.collection('agencies').doc(currentAgencyId).set({
+            siteTitle: 'ScopeBuilderAI',
+            tagline: 'Professional Proposal Generator'
+          }, { merge: true });
         }
+      } catch (e) {
+        console.error(e);
       }
     }
+
+    function setVal(id, val){ const el=document.getElementById(id); if(el) el.value=val; }
 
     // Save branding
     async function saveBranding() {
-      const logoFile = document.getElementById('logoFile').files[0];
-      let logoUrl = '';
-
-      if (logoFile) {
-        const storageRef = storage.ref(`logos/${currentAgencyId}/${logoFile.name}`);
-        await storageRef.put(logoFile);
-        logoUrl = await storageRef.getDownloadURL();
-      }
-
       try {
-        await db.collection('agencies').doc(currentAgencyId).update({
-          siteTitle: document.getElementById('siteTitle').value,
-          tagline: document.getElementById('tagline').value,
+        let logoUrl = '';
+        const file = document.getElementById('logoFile').files[0];
+        if (file) {
+          const ref = storage.ref(`logos/${currentAgencyId}/${file.name}`);
+          await ref.put(file);
+          logoUrl = await ref.getDownloadURL();
+        }
+        await db.collection('agencies').doc(currentAgencyId).set({
+          siteTitle: document.getElementById('siteTitle').value.trim(),
+          tagline: document.getElementById('tagline').value.trim(),
           primaryColor: document.getElementById('primaryColor').value,
           secondaryColor: document.getElementById('secondaryColor').value,
           ...(logoUrl && { logoUrl })
-        });
+        }, { merge: true });
         updatePreview();
-        showMessage('brandingSuccess', true);
-        setTimeout(() => hideMessage('brandingSuccess'), 2000);
-      } catch (error) {
-        showMessage('brandingError', true);
+        flash('brandingSuccess');
+      } catch (e) {
+        flash('brandingError');
       }
     }
 
     // Save settings
     async function saveSettings() {
       try {
-        await db.collection('agencies').doc(currentAgencyId).update({
-          agencyName: document.getElementById('agencyName').value,
-          customDomain: document.getElementById('customDomain').value
-        });
-        showMessage('settingsSuccess', true);
-        setTimeout(() => hideMessage('settingsSuccess'), 2000);
-      } catch (error) {
-        showMessage('settingsError', true);
+        await db.collection('agencies').doc(currentAgencyId).set({
+          agencyName: document.getElementById('agencyName').value.trim(),
+          customDomain: document.getElementById('customDomain').value.trim()
+        }, { merge: true });
+        flash('settingsSuccess');
+      } catch (e) {
+        flash('settingsError');
       }
     }
 
-    // Update preview
-    function updatePreview() {
-      document.getElementById('previewTitle').textContent = document.getElementById('siteTitle').value;
-      document.getElementById('previewTagline').textContent = document.getElementById('tagline').value;
-      document.getElementById('previewTitle').style.color = document.getElementById('primaryColor').value;
-    }
-
-    // Preview logo
     function previewLogo() {
       const file = document.getElementById('logoFile').files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          document.getElementById('logoImg').src = e.target.result;
-          document.getElementById('logoImg').style.display = 'block';
-          document.getElementById('logoPlaceholder').style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-      }
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.getElementById('logoImg');
+        img.src = e.target.result; img.style.display = 'block';
+        document.getElementById('logoPlaceholder').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
     }
 
     function updatePreview() {
@@ -327,16 +276,13 @@
       document.getElementById('previewTitle').style.color = document.getElementById('primaryColor').value;
     }
 
-    function showMessage(id, show) {
-      document.getElementById(id).style.display = show ? 'block' : 'none';
+    function flash(id){
+      const el = document.getElementById(id); if(!el) return;
+      el.style.display='block'; setTimeout(()=>el.style.display='none', 1800);
     }
 
-    function hideMessage(id) {
-      document.getElementById(id).style.display = 'none';
-    }
-
-    function toggleSignUp() {
-      alert('Sign-up coming soon. Contact us at sales@scopebuilderai.com to set up your white-label account.');
+    function toggleSignUp(){
+      alert('For now, create your first user in Firebase Console → Authentication → Users → Add user. Sign-up UI will be added later.');
     }
   </script>
 </body>
