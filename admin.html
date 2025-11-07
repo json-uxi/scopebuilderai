@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,120 +15,137 @@
       --accent: #22c55e;
       --danger: #ef4444;
       --border: #1f2a44;
+      --input: #0b1322;
+      --shadow: rgba(0,0,0,0.4);
+    }
+    html[data-theme="light"] {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --muted: #5a6b87;
+      --text: #0f172a;
+      --primary: #1e3a8a;
+      --accent: #16a34a;
+      --danger: #dc2626;
+      --border: #e5e7eb;
+      --input: #f8fafc;
+      --shadow: rgba(0,0,0,0.06);
     }
     html, body { height: 100%; }
     body {
       margin: 0;
-      background: radial-gradient(1200px 600px at 20% -10%, #17335a55 20%, transparent 60%),
-                  radial-gradient(1200px 600px at 80% -10%, #17335a55 20%, transparent 60%),
-                  var(--bg);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, #17335a33 20%, transparent 60%),
+        radial-gradient(1200px 600px at 80% -10%, #17335a33 20%, transparent 60%),
+        var(--bg);
       color: var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      transition: background 0.2s ease, color 0.2s ease;
     }
     .container { max-width: 980px; margin: 40px auto; padding: 0 16px; }
 
-    /* Card */
     .card {
-      background: linear-gradient(180deg, #111a2b 0%, #0e1627 100%);
+      background: linear-gradient(180deg, color-mix(in oklab, var(--card) 96%, #000 4%) 0%, var(--card) 100%);
       border: 1px solid var(--border);
       border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+      box-shadow: 0 10px 30px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.04);
       padding: 24px;
+      transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
 
     h1,h2,h3 { margin: 0 0 12px; }
     .muted { color: var(--muted); }
 
-    /* Forms */
-    .field { margin: 12px 0; }
-    label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
-    input[type="text"], input[type="email"], input[type="password"], input[type="color"] {
-      width: 100%;
-      background: #0b1322;
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 10px;
-      padding: 12px 12px;
-      outline: none;
-    }
-    input[type="file"] { color: var(--muted); }
     .row { display: flex; gap: 12px; }
-    .row > * { flex: 1; }
+    .row.center { align-items: center; justify-content: space-between; }
 
     .btn {
-      appearance: none;
-      border: 1px solid var(--border);
-      background: linear-gradient(180deg, #1a2b48 0%, #142239 100%);
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 10px;
-      cursor: pointer;
+      appearance: none; border: 1px solid var(--border);
+      background: linear-gradient(180deg, color-mix(in oklab, var(--card) 80%, #415a86 20%) 0%, color-mix(in oklab, var(--card) 90%, #1a2740 10%) 100%);
+      color: var(--text); padding: 10px 14px; border-radius: 10px; cursor: pointer;
     }
-    .btn.primary { border-color: #2e5fb5; background: linear-gradient(180deg, #2f66c7 0%, #244e98 100%); }
-    .btn.success { border-color: #1a8a46; background: linear-gradient(180deg, #23b15a 0%, #1d8f4b 100%); }
-    .btn.danger { border-color: #aa2a2a; background: linear-gradient(180deg, #ef4444 0%, #b72d2d 100%); }
-    .btn.link { background: transparent; border-color: transparent; color: var(--muted); text-decoration: underline; }
+    .btn.primary { border-color: #2e5fb5; background: linear-gradient(180deg, #2f66c7 0%, #244e98 100%); color: #fff; }
+    .btn.success { border-color: #1a8a46; background: linear-gradient(180deg, #23b15a 0%, #1d8f4b 100%); color: #fff; }
+    .btn.danger { border-color: #aa2a2a; background: linear-gradient(180deg, #ef4444 0%, #b72d2d 100%); color: #fff; }
+    .btn.link { background: transparent; border-color: transparent; color: var(--muted); text-decoration: underline; padding: 8px 6px; }
 
     .pill {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      color: #cde3ff;
-      background: linear-gradient(180deg, #1a2b48 0%, #142239 100%);
+      display: inline-block; padding: 6px 10px; border-radius: 999px; font-size: 12px; color: color-mix(in oklab, var(--text), #9ac 30%);
+      background: linear-gradient(180deg, color-mix(in oklab, var(--card), #254) 0%, color-mix(in oklab, var(--card), #122) 100%);
       border: 1px solid var(--border);
     }
 
     .divider { height: 1px; background: var(--border); margin: 16px 0; }
 
+    /* Forms */
+    .field { margin: 12px 0; }
+    label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%; background: var(--input); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 12px 12px; outline: none;
+    }
+    input[type="file"] { color: var(--muted); }
+
+    /* Enhanced color picker */
+    .color-field { display: grid; grid-template-columns: 46px 1fr 110px; gap: 10px; align-items: center; }
+    .color-chip {
+      width: 46px; height: 38px; border-radius: 10px; border: 1px solid var(--border); background: var(--input);
+      display: grid; place-items: center; font-size: 11px; color: var(--muted);
+    }
+    .color-input {
+      width: 100%; background: var(--input); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 10px 12px;
+    }
+    .hex-input {
+      width: 110px; text-transform: uppercase; background: var(--input); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 10px 12px;
+    }
+
+    /* Password eye button */
+    .password-wrap { position: relative; }
+    .toggle-eye-btn {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 8px; border-radius: 8px; font-size: 13px; line-height: 1; color: var(--muted);
+      border: 1px solid var(--border); background: var(--input); cursor: pointer;
+    }
+
     /* Logo preview */
     .logo-box {
       height: 84px; border: 1px dashed var(--border); border-radius: 12px;
-      display: flex; align-items: center; justify-content: center; background: #0b1322;
-      overflow: hidden;
+      display: flex; align-items: center; justify-content: center; background: var(--input); overflow: hidden;
     }
     .logo-box img { max-height: 84px; max-width: 100%; display: none; }
 
     /* Alerts */
-    .alert {
-      display: none; margin-top: 10px; padding: 10px 12px; border-radius: 10px; font-size: 14px;
-    }
-    .alert.ok { background: #0d2b1b; border: 1px solid #1b5e33; color: #b1f3c8; }
-    .alert.err { background: #2b0d0d; border: 1px solid #5e1b1b; color: #f3b1b1; }
+    .alert { display: none; margin-top: 10px; padding: 10px 12px; border-radius: 10px; font-size: 14px; }
+    .alert.ok { background: color-mix(in oklab, #0d2b1b 80%, var(--accent) 20%); border: 1px solid #1b5e33; color: #b1f3c8; }
+    .alert.err { background: color-mix(in oklab, #2b0d0d 80%, var(--danger) 20%); border: 1px solid #5e1b1b; color: #f3b1b1; }
 
-    /* Password field with eye icon */
-    .password-wrap {
-      position: relative;
+    /* Theme switch */
+    .theme-switch { display: inline-flex; gap: 8px; align-items: center; }
+    .theme-toggle {
+      border: 1px solid var(--border); background: var(--input); color: var(--text); padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 13px;
     }
-    .toggle-eye {
-      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-      cursor: pointer; color: var(--muted); user-select: none; font-size: 14px;
-    }
-    .actions { display: flex; align-items: center; gap: 10px; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="card">
-      <div class="row" style="align-items:center; justify-content:space-between;">
+      <div class="row center">
         <div>
           <h1>ScopeBuilderAI <span class="pill">Admin</span></h1>
           <div class="muted">White‑label settings for your agency</div>
         </div>
-        <div>
+        <div class="row" style="gap:10px;">
+          <div class="theme-switch">
+            <button id="themeToggle" class="theme-toggle" type="button" title="Toggle light/dark">Dark</button>
+          </div>
           <button id="logoutBtn" class="btn danger" style="display:none;">Log out</button>
         </div>
       </div>
 
       <div class="divider"></div>
 
-      <!-- Auth section -->
+      <!-- Auth -->
       <section id="authSection">
         <h3>Sign in</h3>
         <form id="loginForm" autocomplete="on">
@@ -139,9 +156,11 @@
           <div class="field password-wrap">
             <label for="password">Password</label>
             <input id="password" name="password" type="password" placeholder="••••••••" required />
-            <span id="toggleEye" class="toggle-eye" title="Show/Hide">👁️</span>
+            <button id="toggleEye" class="toggle-eye-btn" type="button" aria-label="Show password">
+              <span id="eyeIcon">👁️</span>
+            </button>
           </div>
-          <div class="actions">
+          <div class="row" style="align-items:center;">
             <button class="btn primary" type="submit">Sign in</button>
             <button id="forgotBtn" class="btn link" type="button">Forgot password?</button>
           </div>
@@ -156,6 +175,7 @@
           <!-- Branding -->
           <div>
             <h3>Branding</h3>
+
             <div class="field">
               <label>Logo</label>
               <div class="logo-box">
@@ -175,14 +195,22 @@
               <input id="tagline" type="text" placeholder="Professional Proposal Generator" />
             </div>
 
-            <div class="row">
-              <div class="field">
-                <label for="primaryColor">Primary color</label>
-                <input id="primaryColor" type="color" value="#1e3a8a" />
+            <!-- Improved color pickers -->
+            <div class="field">
+              <label for="primaryColor">Primary color</label>
+              <div class="color-field">
+                <div class="color-chip" id="chipPrimary">A</div>
+                <input id="primaryColor" class="color-input" type="color" value="#1e3a8a" />
+                <input id="primaryHex" class="hex-input" type="text" value="#1E3A8A" maxlength="7" />
               </div>
-              <div class="field">
-                <label for="secondaryColor">Secondary color</label>
-                <input id="secondaryColor" type="color" value="#3a8bff" />
+            </div>
+
+            <div class="field">
+              <label for="secondaryColor">Secondary color</label>
+              <div class="color-field">
+                <div class="color-chip" id="chipSecondary">B</div>
+                <input id="secondaryColor" class="color-input" type="color" value="#3a8bff" />
+                <input id="secondaryHex" class="hex-input" type="text" value="#3A8BFF" maxlength="7" />
               </div>
             </div>
 
@@ -219,11 +247,11 @@
     </div>
   </div>
 
-  <!-- Firebase SDKs (v8 namespaced) -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+  <!-- Firebase SDKs: v10 compat (CSP‑friendly) -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-storage-compat.js"></script>
 
   <!-- Initialize Firebase (single init) -->
   <script>
@@ -239,24 +267,47 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
     const storage = firebase.storage();
+    // Avoid WebChannel + CSP issues
+    try { db.settings({ experimentalForceLongPolling: true, merge: true }); } catch(e){}
   </script>
 
   <!-- Admin logic -->
   <script>
+    // THEME
+    const themeToggle = document.getElementById('themeToggle');
+    function applyTheme(t){ document.documentElement.setAttribute('data-theme', t); themeToggle.textContent = t === 'dark' ? 'Dark' : 'Light'; localStorage.setItem('sbai-theme', t); }
+    applyTheme(localStorage.getItem('sbai-theme') || 'dark');
+    themeToggle.addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+    });
+
     // UI helpers
-    function flash(id) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.style.display = 'block';
-      setTimeout(() => el.style.display = 'none', 1800);
-    }
-    function setVal(id, val) { const el = document.getElementById(id); if (el) el.value = val; }
+    function flash(id) { const el = document.getElementById(id); if (!el) return; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 1800); }
+    function setVal(id, val) { const el = document.getElementById(id); if (el != null) el.value = val; }
     function updatePreview() {
       document.getElementById('previewTitle').textContent = document.getElementById('siteTitle').value || 'ScopeBuilderAI';
       document.getElementById('previewTagline').textContent = document.getElementById('tagline').value || 'Professional Proposal Generator';
       const pc = document.getElementById('primaryColor').value || '#1e3a8a';
       document.getElementById('previewTitle').style.color = pc;
     }
+    function validateHex(v){ return /^#([0-9a-f]{6})$/i.test(v); }
+    function syncColorControls(which){
+      const picker = document.getElementById(which + 'Color');
+      const hex = document.getElementById(which + 'Hex');
+      const chip = document.getElementById('chip' + (which === 'primary' ? 'Primary' : 'Secondary'));
+      const toHex = (val) => val.toUpperCase();
+      picker.addEventListener('input', () => { hex.value = toHex(picker.value); chip.style.background = picker.value; updatePreview(); });
+      hex.addEventListener('input', () => {
+        const v = hex.value.startsWith('#') ? hex.value : '#'+hex.value;
+        if (validateHex(v)) { picker.value = v; chip.style.background = v; updatePreview(); }
+      });
+      // init
+      hex.value = toHex(picker.value);
+      chip.style.background = picker.value;
+    }
+
+    // Logo preview
     function previewLogo() {
       const file = document.getElementById('logoFile').files[0];
       if (!file) return;
@@ -269,37 +320,29 @@
       };
       reader.readAsDataURL(file);
     }
+    window.previewLogo = previewLogo;
 
-    // Password eye toggle
+    // Password toggle (compact & visible)
     const passEl = document.getElementById('password');
-    const eyeEl = document.getElementById('toggleEye');
-    eyeEl.addEventListener('click', () => {
+    const eyeBtn = document.getElementById('toggleEye');
+    const eyeIcon = document.getElementById('eyeIcon');
+    eyeBtn.addEventListener('click', () => {
       const isPwd = passEl.type === 'password';
       passEl.type = isPwd ? 'text' : 'password';
-      eyeEl.textContent = isPwd ? '🙈' : '👁️';
+      eyeIcon.textContent = isPwd ? '🙈' : '👁️';
+      eyeBtn.setAttribute('aria-label', isPwd ? 'Hide password' : 'Show password');
     });
 
-    // Forgot password flow
+    // Forgot password
     const forgotBtn = document.getElementById('forgotBtn');
     const resetInfo = document.getElementById('resetInfo');
     const authError = document.getElementById('authError');
     forgotBtn.addEventListener('click', async () => {
       const email = document.getElementById('email').value.trim();
-      resetInfo.style.display = 'none';
-      authError.style.display = 'none';
-      if (!email) {
-        authError.textContent = 'Enter your email first, then click “Forgot password?”.';
-        authError.style.display = 'block';
-        return;
-      }
-      try {
-        await auth.sendPasswordResetEmail(email);
-        resetInfo.textContent = 'Password reset email sent. Check your inbox.';
-        resetInfo.style.display = 'block';
-      } catch (e) {
-        authError.textContent = e.message;
-        authError.style.display = 'block';
-      }
+      resetInfo.style.display = 'none'; authError.style.display = 'none';
+      if (!email) { authError.textContent = 'Enter your email, then click “Forgot password?”.'; authError.style.display = 'block'; return; }
+      try { await auth.sendPasswordResetEmail(email); resetInfo.textContent = 'Password reset email sent.'; resetInfo.style.display = 'block'; }
+      catch (e) { authError.textContent = e.message; authError.style.display = 'block'; }
     });
 
     // Auth state
@@ -319,28 +362,21 @@
         logoutBtn.style.display = 'inline-block';
         await loadAgencyData();
       } else {
-        currentUser = null;
-        currentAgencyId = null;
+        currentUser = null; currentAgencyId = null;
         authSection.style.display = 'block';
         adminDashboard.style.display = 'none';
         logoutBtn.style.display = 'none';
       }
     });
 
-    // Login handler
+    // Login
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      authError.style.display = 'none';
-      resetInfo.style.display = 'none';
+      authError.style.display = 'none'; resetInfo.style.display = 'none';
       const email = document.getElementById('email').value.trim();
       const password = passEl.value.trim();
-      try {
-        await auth.signInWithEmailAndPassword(email, password);
-        authError.textContent = '';
-      } catch (err) {
-        authError.textContent = err.message;
-        authError.style.display = 'block';
-      }
+      try { await auth.signInWithEmailAndPassword(email, password); authError.textContent = ''; }
+      catch (err) { authError.textContent = err.message; authError.style.display = 'block'; }
     });
 
     // Logout
@@ -349,29 +385,35 @@
     // Load agency doc
     async function loadAgencyData() {
       try {
-        const snap = await db.collection('agencies').doc(currentAgencyId).get();
+        const ref = db.collection('agencies').doc(currentAgencyId);
+        const snap = await ref.get();
         if (snap.exists) {
           const d = snap.data();
           setVal('siteTitle', d.siteTitle || 'ScopeBuilderAI');
           setVal('tagline', d.tagline || 'Professional Proposal Generator');
-          setVal('primaryColor', d.primaryColor || '#1e3a8a');
-          setVal('secondaryColor', d.secondaryColor || '#3a8bff');
           setVal('agencyName', d.agencyName || '');
           setVal('customDomain', d.customDomain || '');
+          const pc = (d.primaryColor || '#1e3a8a').toLowerCase();
+          const sc = (d.secondaryColor || '#3a8bff').toLowerCase();
+          document.getElementById('primaryColor').value = pc;
+          document.getElementById('secondaryColor').value = sc;
+          document.getElementById('primaryHex').value = pc.toUpperCase();
+          document.getElementById('secondaryHex').value = sc.toUpperCase();
+          document.getElementById('chipPrimary').style.background = pc;
+          document.getElementById('chipSecondary').style.background = sc;
           if (d.logoUrl) {
             const img = document.getElementById('logoImg');
-            img.src = d.logoUrl;
-            img.style.display = 'block';
+            img.src = d.logoUrl; img.style.display = 'block';
             document.getElementById('logoPlaceholder').style.display = 'none';
           }
           updatePreview();
         } else {
-          await db.collection('agencies').doc(currentAgencyId).set({
-            siteTitle: 'ScopeBuilderAI',
-            tagline: 'Professional Proposal Generator'
-          }, { merge: true });
+          // ensure doc exists for future merges
+          await ref.set({ siteTitle: 'ScopeBuilderAI', tagline: 'Professional Proposal Generator' }, { merge: true });
         }
-      } catch (e) { console.error(e); }
+      } catch (e) {
+        console.error('loadAgencyData failed', e);
+      }
     }
 
     // Save branding
@@ -384,16 +426,20 @@
           await ref.put(file);
           logoUrl = await ref.getDownloadURL();
         }
-        await db.collection('agencies').doc(currentAgencyId).set({
+        const payload = {
           siteTitle: document.getElementById('siteTitle').value.trim(),
           tagline: document.getElementById('tagline').value.trim(),
           primaryColor: document.getElementById('primaryColor').value,
-          secondaryColor: document.getElementById('secondaryColor').value,
-          ...(logoUrl && { logoUrl })
-        }, { merge: true });
+          secondaryColor: document.getElementById('secondaryColor').value
+        };
+        if (logoUrl) payload.logoUrl = logoUrl;
+        await db.collection('agencies').doc(currentAgencyId).set(payload, { merge: true });
         updatePreview();
         flash('brandingSuccess');
-      } catch (e) { flash('brandingError'); }
+      } catch (e) {
+        console.error('saveBranding failed', e);
+        flash('brandingError');
+      }
     }
     window.saveBranding = saveBranding;
 
@@ -405,9 +451,18 @@
           customDomain: document.getElementById('customDomain').value.trim()
         }, { merge: true });
         flash('settingsSuccess');
-      } catch (e) { flash('settingsError'); }
+      } catch (e) {
+        console.error('saveSettings failed', e);
+        flash('settingsError');
+      }
     }
     window.saveSettings = saveSettings;
+
+    // Initialize enhanced color controls
+    syncColorControls('primary');
+    syncColorControls('secondary');
+    document.getElementById('primaryColor').addEventListener('change', updatePreview);
+    document.getElementById('secondaryColor').addEventListener('change', updatePreview);
   </script>
 </body>
 </html>
