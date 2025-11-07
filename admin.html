@@ -1,172 +1,311 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ScopeBuilderAI — White-Label Admin</title>
-  <meta name="description" content="Customize your white-label proposal generator branding and settings." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <title>ScopeBuilderAI — Admin</title>
+  <link rel="icon" href="favicon.ico" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; font-family: 'Inter', system-ui, sans-serif; background:#f8fafc; color:#0f172a; }
-    .auth-container { max-width: 420px; margin: 60px auto; padding: 32px; background:#fff; border-radius:16px; box-shadow: 0 12px 44px rgba(0,0,0,0.08); }
-    .auth-container h2 { margin: 0 0 18px; font-size: 24px; font-weight: 900; color:#1e3a8a; }
-    .form-group { margin-bottom: 14px; }
-    .form-group label { display:block; font-weight:800; font-size:13px; color:#334155; margin-bottom:6px; }
-    .form-group input { width:100%; padding:12px; border:1.5px solid #e2e8f0; border-radius:8px; font-size:14px; font-weight:700; }
-    .form-group input:focus { outline:none; border-color:#1e3a8a; box-shadow:0 0 0 3px rgba(30,58,138,0.1); }
-    .auth-btn { width:100%; padding:12px; background:#1e3a8a; color:#fff; border:none; border-radius:8px; font-weight:900; cursor:pointer; font-size:14px; }
-    .auth-btn:hover { filter:brightness(1.08); }
-    .auth-error { color:#dc2626; font-size:13px; margin-top:10px; min-height:18px; }
-    .admin-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    .admin-header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; padding-bottom: 16px; border-bottom:1px solid #e2e8f0; }
-    .admin-header h1 { margin:0; font-size:26px; font-weight:900; color:#1e3a8a; }
-    .logout-btn { padding:10px 16px; background:#dc2626; color:#fff; border:none; border-radius:8px; font-weight:800; cursor:pointer; }
-    .admin-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .admin-card { background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; }
-    .admin-card h3 { margin:0 0 12px; font-size:18px; font-weight:900; }
-    .color-picker-group { display:flex; gap:12px; align-items:center; margin-bottom:10px; }
-    .logo-upload { display:flex; gap:12px; align-items:flex-start; margin-bottom: 10px; }
-    .logo-preview { width:80px; height:80px; border:1px solid #e2e8f0; border-radius:8px; background:#f1f5f9; display:flex; align-items:center; justify-content:center; overflow:hidden; }
-    .logo-preview img { max-width:100%; max-height:100%; }
-    .save-btn { width:100%; padding:12px; background: linear-gradient(135deg,#1e3a8a,#2563eb); color:#fff; border:none; border-radius:8px; font-weight:900; cursor:pointer; font-size:14px; }
-    .save-message { margin-top:10px; padding:10px; border-radius:8px; text-align:center; font-weight:800; font-size:13px; display:none; }
-    .save-success { background:#dcfce7; color:#166534; }
-    .save-error { background:#fee2e2; color:#991b1b; }
-    @media (max-width: 900px) { .admin-grid { grid-template-columns: 1fr; } }
+    :root {
+      --bg: #0b1220;
+      --card: #121a2a;
+      --muted: #7b8aa5;
+      --text: #e6eeff;
+      --primary: #3a8bff;
+      --accent: #22c55e;
+      --danger: #ef4444;
+      --border: #1f2a44;
+    }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 600px at 20% -10%, #17335a55 20%, transparent 60%),
+                  radial-gradient(1200px 600px at 80% -10%, #17335a55 20%, transparent 60%),
+                  var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+    .container { max-width: 980px; margin: 40px auto; padding: 0 16px; }
+
+    /* Card */
+    .card {
+      background: linear-gradient(180deg, #111a2b 0%, #0e1627 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+      padding: 24px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    h1,h2,h3 { margin: 0 0 12px; }
+    .muted { color: var(--muted); }
+
+    /* Forms */
+    .field { margin: 12px 0; }
+    label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    input[type="text"], input[type="email"], input[type="password"], input[type="color"] {
+      width: 100%;
+      background: #0b1322;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 12px 12px;
+      outline: none;
+    }
+    input[type="file"] { color: var(--muted); }
+    .row { display: flex; gap: 12px; }
+    .row > * { flex: 1; }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #1a2b48 0%, #142239 100%);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .btn.primary { border-color: #2e5fb5; background: linear-gradient(180deg, #2f66c7 0%, #244e98 100%); }
+    .btn.success { border-color: #1a8a46; background: linear-gradient(180deg, #23b15a 0%, #1d8f4b 100%); }
+    .btn.danger { border-color: #aa2a2a; background: linear-gradient(180deg, #ef4444 0%, #b72d2d 100%); }
+    .btn.link { background: transparent; border-color: transparent; color: var(--muted); text-decoration: underline; }
+
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #cde3ff;
+      background: linear-gradient(180deg, #1a2b48 0%, #142239 100%);
+      border: 1px solid var(--border);
+    }
+
+    .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+    /* Logo preview */
+    .logo-box {
+      height: 84px; border: 1px dashed var(--border); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; background: #0b1322;
+      overflow: hidden;
+    }
+    .logo-box img { max-height: 84px; max-width: 100%; display: none; }
+
+    /* Alerts */
+    .alert {
+      display: none; margin-top: 10px; padding: 10px 12px; border-radius: 10px; font-size: 14px;
+    }
+    .alert.ok { background: #0d2b1b; border: 1px solid #1b5e33; color: #b1f3c8; }
+    .alert.err { background: #2b0d0d; border: 1px solid #5e1b1b; color: #f3b1b1; }
+
+    /* Password field with eye icon */
+    .password-wrap {
+      position: relative;
+    }
+    .toggle-eye {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      cursor: pointer; color: var(--muted); user-select: none; font-size: 14px;
+    }
+    .actions { display: flex; align-items: center; gap: 10px; }
   </style>
 </head>
 <body>
-
-  <!-- Auth -->
-  <div id="authSection" class="auth-container">
-    <h2>White-Label Admin</h2>
-    <form id="loginForm">
-      <div class="form-group">
-        <label for="email">Agency Email</label>
-        <input type="email" id="email" placeholder="your@agency.com" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="••••••••" required />
-      </div>
-      <button type="submit" class="auth-btn">Sign In</button>
-      <div id="authError" class="auth-error"></div>
-    </form>
-    <p style="text-align:center; margin-top:12px; font-size:13px; color:#64748b;">
-      New agency? <a href="#" onclick="toggleSignUp()" style="color:#1e3a8a; font-weight:800; text-decoration:none;">Create Account</a>
-    </p>
-  </div>
-
-  <!-- Dashboard -->
-  <div id="adminDashboard" style="display:none;">
-    <div class="admin-container">
-      <div class="admin-header">
-        <h1>Customize Your Branding</h1>
-        <button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="container">
+    <div class="card">
+      <div class="row" style="align-items:center; justify-content:space-between;">
+        <div>
+          <h1>ScopeBuilderAI <span class="pill">Admin</span></h1>
+          <div class="muted">White‑label settings for your agency</div>
+        </div>
+        <div>
+          <button id="logoutBtn" class="btn danger" style="display:none;">Log out</button>
+        </div>
       </div>
 
-      <div class="admin-grid">
-        <!-- Branding -->
-        <div class="admin-card">
-          <h3>🎨 Branding</h3>
-          <div class="logo-upload">
-            <input type="file" id="logoFile" accept="image/png,image/jpeg" onchange="previewLogo()" />
-            <div class="logo-preview">
-              <img id="logoImg" src="" alt="Logo" style="display:none;" />
-              <span id="logoPlaceholder" style="color:#94a3b8; font-size:12px;">No logo</span>
+      <div class="divider"></div>
+
+      <!-- Auth section -->
+      <section id="authSection">
+        <h3>Sign in</h3>
+        <form id="loginForm" autocomplete="on">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@agency.com" required />
+          </div>
+          <div class="field password-wrap">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="••••••••" required />
+            <span id="toggleEye" class="toggle-eye" title="Show/Hide">👁️</span>
+          </div>
+          <div class="actions">
+            <button class="btn primary" type="submit">Sign in</button>
+            <button id="forgotBtn" class="btn link" type="button">Forgot password?</button>
+          </div>
+          <div id="authError" class="alert err"></div>
+          <div id="resetInfo" class="alert ok"></div>
+        </form>
+      </section>
+
+      <!-- Admin dashboard -->
+      <section id="adminDashboard" style="display:none;">
+        <div class="grid-2">
+          <!-- Branding -->
+          <div>
+            <h3>Branding</h3>
+            <div class="field">
+              <label>Logo</label>
+              <div class="logo-box">
+                <img id="logoImg" alt="Logo preview" />
+                <span id="logoPlaceholder" class="muted">No logo uploaded</span>
+              </div>
+              <input id="logoFile" type="file" accept="image/*" onchange="previewLogo()" />
+            </div>
+
+            <div class="field">
+              <label for="siteTitle">Site title</label>
+              <input id="siteTitle" type="text" placeholder="ScopeBuilderAI" />
+            </div>
+
+            <div class="field">
+              <label for="tagline">Tagline</label>
+              <input id="tagline" type="text" placeholder="Professional Proposal Generator" />
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <label for="primaryColor">Primary color</label>
+                <input id="primaryColor" type="color" value="#1e3a8a" />
+              </div>
+              <div class="field">
+                <label for="secondaryColor">Secondary color</label>
+                <input id="secondaryColor" type="color" value="#3a8bff" />
+              </div>
+            </div>
+
+            <button class="btn success" onclick="saveBranding()">Save Branding</button>
+            <div id="brandingSuccess" class="alert ok">Branding saved.</div>
+            <div id="brandingError" class="alert err">Could not save branding.</div>
+          </div>
+
+          <!-- Settings -->
+          <div>
+            <h3>Settings</h3>
+            <div class="field">
+              <label for="agencyName">Agency name</label>
+              <input id="agencyName" type="text" placeholder="Acme Studio" />
+            </div>
+            <div class="field">
+              <label for="customDomain">Custom domain (optional)</label>
+              <input id="customDomain" type="text" placeholder="agency.example.com" />
+            </div>
+            <button class="btn success" onclick="saveSettings()">Save Settings</button>
+            <div id="settingsSuccess" class="alert ok">Settings saved.</div>
+            <div id="settingsError" class="alert err">Could not save settings.</div>
+
+            <div class="divider"></div>
+
+            <h3>Preview</h3>
+            <div class="card" style="padding:16px;">
+              <h2 id="previewTitle" style="color:#1e3a8a;">ScopeBuilderAI</h2>
+              <div id="previewTagline" class="muted">Professional Proposal Generator</div>
             </div>
           </div>
-
-          <div class="form-group">
-            <label>Site Title</label>
-            <input type="text" id="siteTitle" placeholder="Your Agency Proposals" value="ScopeBuilderAI" />
-          </div>
-
-          <div class="form-group">
-            <label>Tagline</label>
-            <input type="text" id="tagline" placeholder="Professional Proposal Generator" value="Professional Proposal Generator" />
-          </div>
-
-          <div class="color-picker-group">
-            <label style="width:100px; font-weight:800; font-size:13px; color:#334155;">Primary</label>
-            <input type="color" id="primaryColor" value="#1e3a8a" />
-          </div>
-          <div class="color-picker-group">
-            <label style="width:100px; font-weight:800; font-size:13px; color:#334155;">Secondary</label>
-            <input type="color" id="secondaryColor" value="#3a8bff" />
-          </div>
-
-          <button class="save-btn" onclick="saveBranding()">Save Branding</button>
-          <div class="save-message save-success" id="brandingSuccess">✓ Branding saved successfully!</div>
-          <div class="save-message save-error" id="brandingError">✗ Error saving branding</div>
         </div>
-
-        <!-- Settings -->
-        <div class="admin-card">
-          <h3>⚙️ Settings</h3>
-          <div class="form-group">
-            <label>Custom Domain (optional)</label>
-            <input type="text" id="customDomain" placeholder="proposals.youragency.com" />
-          </div>
-          <div class="form-group">
-            <label>Agency Name</label>
-            <input type="text" id="agencyName" placeholder="Your Agency Name" />
-          </div>
-          <div class="form-group">
-            <label>Plan</label>
-            <p style="margin:0; padding:10px; background:#f1f5f9; border-radius:8px; color:#334155; font-weight:800;">White-Label Pro — $349/month</p>
-          </div>
-
-          <button class="save-btn" onclick="saveSettings()">Save Settings</button>
-          <div class="save-message save-success" id="settingsSuccess">✓ Settings saved successfully!</div>
-          <div class="save-message save-error" id="settingsError">✗ Error saving settings</div>
-        </div>
-      </div>
-
-      <!-- Preview -->
-      <div class="admin-card" style="margin-top: 20px;">
-        <h3>👁️ Preview</h3>
-        <div style="border:1px solid #e2e8f0; border-radius:8px; padding:16px; background:#f8fafc; text-align:center;">
-          <h2 id="previewTitle" style="margin:0 0 6px; font-size:22px; font-weight:900; color:#1e3a8a;">ScopeBuilderAI</h2>
-          <p id="previewTagline" style="margin:0; color:#64748b; font-weight:700;">Professional Proposal Generator</p>
-        </div>
-      </div>
+      </section>
     </div>
   </div>
 
- <!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+  <!-- Firebase SDKs (v8 namespaced) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
-<!-- Initialize Firebase (must be right after SDKs) -->
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyDadaImEVf-rdcEPlza_UR3Kp--52wQbhI",
-    authDomain: "scopebuilderai.firebaseapp.com",
-    projectId: "scopebuilderai",
-    storageBucket: "scopebuilderai.firebasestorage.app",
-    messagingSenderId: "471021428025",
-    appId: "1:471021428025:web:8246535fe30b2854701ce8"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  const storage = firebase.storage();
-</script>
-
-<!-- Your app code that uses auth/db/storage goes after this -->
-<script>
-  // Example: onAuthStateChanged, login handler, save functions...
-</script>
-
-    // Init
-    firebase.initializeApp(firebaseConfig);
+  <!-- Initialize Firebase (single init) -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDadaImEVf-rdcEPlza_UR3Kp--52wQbhI",
+      authDomain: "scopebuilderai.firebaseapp.com",
+      projectId: "scopebuilderai",
+      storageBucket: "scopebuilderai.firebasestorage.app",
+      messagingSenderId: "471021428025",
+      appId: "1:471021428025:web:8246535fe30b2854701ce8"
+    };
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const auth = firebase.auth();
     const db = firebase.firestore();
     const storage = firebase.storage();
+  </script>
+
+  <!-- Admin logic -->
+  <script>
+    // UI helpers
+    function flash(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 1800);
+    }
+    function setVal(id, val) { const el = document.getElementById(id); if (el) el.value = val; }
+    function updatePreview() {
+      document.getElementById('previewTitle').textContent = document.getElementById('siteTitle').value || 'ScopeBuilderAI';
+      document.getElementById('previewTagline').textContent = document.getElementById('tagline').value || 'Professional Proposal Generator';
+      const pc = document.getElementById('primaryColor').value || '#1e3a8a';
+      document.getElementById('previewTitle').style.color = pc;
+    }
+    function previewLogo() {
+      const file = document.getElementById('logoFile').files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.getElementById('logoImg');
+        img.src = e.target.result;
+        img.style.display = 'block';
+        document.getElementById('logoPlaceholder').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Password eye toggle
+    const passEl = document.getElementById('password');
+    const eyeEl = document.getElementById('toggleEye');
+    eyeEl.addEventListener('click', () => {
+      const isPwd = passEl.type === 'password';
+      passEl.type = isPwd ? 'text' : 'password';
+      eyeEl.textContent = isPwd ? '🙈' : '👁️';
+    });
+
+    // Forgot password flow
+    const forgotBtn = document.getElementById('forgotBtn');
+    const resetInfo = document.getElementById('resetInfo');
+    const authError = document.getElementById('authError');
+    forgotBtn.addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim();
+      resetInfo.style.display = 'none';
+      authError.style.display = 'none';
+      if (!email) {
+        authError.textContent = 'Enter your email first, then click “Forgot password?”.';
+        authError.style.display = 'block';
+        return;
+      }
+      try {
+        await auth.sendPasswordResetEmail(email);
+        resetInfo.textContent = 'Password reset email sent. Check your inbox.';
+        resetInfo.style.display = 'block';
+      } catch (e) {
+        authError.textContent = e.message;
+        authError.style.display = 'block';
+      }
+    });
+
+    // Auth state
+    const authSection = document.getElementById('authSection');
+    const adminDashboard = document.getElementById('adminDashboard');
+    const logoutBtn = document.getElementById('logoutBtn');
 
     let currentUser = null;
     let currentAgencyId = null;
@@ -175,29 +314,37 @@
       if (user) {
         currentUser = user;
         currentAgencyId = user.uid;
-        document.getElementById('authSection').style.display = 'none';
-        document.getElementById('adminDashboard').style.display = 'block';
+        authSection.style.display = 'none';
+        adminDashboard.style.display = 'block';
+        logoutBtn.style.display = 'inline-block';
         await loadAgencyData();
       } else {
-        document.getElementById('authSection').style.display = 'block';
-        document.getElementById('adminDashboard').style.display = 'none';
+        currentUser = null;
+        currentAgencyId = null;
+        authSection.style.display = 'block';
+        adminDashboard.style.display = 'none';
+        logoutBtn.style.display = 'none';
       }
     });
 
-    // Login
+    // Login handler
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      authError.style.display = 'none';
+      resetInfo.style.display = 'none';
       const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
+      const password = passEl.value.trim();
       try {
         await auth.signInWithEmailAndPassword(email, password);
-        document.getElementById('authError').textContent = '';
+        authError.textContent = '';
       } catch (err) {
-        document.getElementById('authError').textContent = err.message;
+        authError.textContent = err.message;
+        authError.style.display = 'block';
       }
     });
 
-    async function logout() { await auth.signOut(); }
+    // Logout
+    logoutBtn.addEventListener('click', async () => { await auth.signOut(); });
 
     // Load agency doc
     async function loadAgencyData() {
@@ -213,23 +360,19 @@
           setVal('customDomain', d.customDomain || '');
           if (d.logoUrl) {
             const img = document.getElementById('logoImg');
-            img.src = d.logoUrl; img.style.display = 'block';
+            img.src = d.logoUrl;
+            img.style.display = 'block';
             document.getElementById('logoPlaceholder').style.display = 'none';
           }
           updatePreview();
         } else {
-          // create an empty doc so updates succeed
           await db.collection('agencies').doc(currentAgencyId).set({
             siteTitle: 'ScopeBuilderAI',
             tagline: 'Professional Proposal Generator'
           }, { merge: true });
         }
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (e) { console.error(e); }
     }
-
-    function setVal(id, val){ const el=document.getElementById(id); if(el) el.value=val; }
 
     // Save branding
     async function saveBranding() {
@@ -250,10 +393,9 @@
         }, { merge: true });
         updatePreview();
         flash('brandingSuccess');
-      } catch (e) {
-        flash('brandingError');
-      }
+      } catch (e) { flash('brandingError'); }
     }
+    window.saveBranding = saveBranding;
 
     // Save settings
     async function saveSettings() {
@@ -263,37 +405,9 @@
           customDomain: document.getElementById('customDomain').value.trim()
         }, { merge: true });
         flash('settingsSuccess');
-      } catch (e) {
-        flash('settingsError');
-      }
+      } catch (e) { flash('settingsError'); }
     }
-
-    function previewLogo() {
-      const file = document.getElementById('logoFile').files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        const img = document.getElementById('logoImg');
-        img.src = e.target.result; img.style.display = 'block';
-        document.getElementById('logoPlaceholder').style.display = 'none';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function updatePreview() {
-      document.getElementById('previewTitle').textContent = document.getElementById('siteTitle').value;
-      document.getElementById('previewTagline').textContent = document.getElementById('tagline').value;
-      document.getElementById('previewTitle').style.color = document.getElementById('primaryColor').value;
-    }
-
-    function flash(id){
-      const el = document.getElementById(id); if(!el) return;
-      el.style.display='block'; setTimeout(()=>el.style.display='none', 1800);
-    }
-
-    function toggleSignUp(){
-      alert('For now, create your first user in Firebase Console → Authentication → Users → Add user. Sign-up UI will be added later.');
-    }
+    window.saveSettings = saveSettings;
   </script>
 </body>
 </html>
