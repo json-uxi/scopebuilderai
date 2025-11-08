@@ -1,480 +1,482 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
+<!doctype html>
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ScopeBuilderAI — Pro Proposal Generator</title>
-  <meta name="description" content="Generate professional client proposals in minutes. Clean templates, smart sections, and export-ready formats." />
-
-  <!-- Favicon and app icons -->
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#1e3a8a">
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-
+  <title>ScopeBuilderAI — Admin</title>
+  <link rel="icon" href="favicon.ico" />
   <style>
-    /* Reset / Base */
-    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --bg: #0b1220;
+      --card: #121a2a;
+      --muted: #7b8aa5;
+      --text: #e6eeff;
+      --primary: #3a8bff;
+      --accent: #22c55e;
+      --danger: #ef4444;
+      --border: #1f2a44;
+      --input: #0b1322;
+      --shadow: rgba(0,0,0,0.4);
+    }
+    html[data-theme="light"] {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --muted: #5a6b87;
+      --text: #0f172a;
+      --primary: #1e3a8a;
+      --accent: #16a34a;
+      --danger: #dc2626;
+      --border: #e5e7eb;
+      --input: #f8fafc;
+      --shadow: rgba(0,0,0,0.06);
+    }
     html, body { height: 100%; }
     body {
       margin: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      line-height: 1.6;
-      background: var(--bg, #f8fafc);
-      color: var(--text, #1f2937);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, #17335a33 20%, transparent 60%),
+        radial-gradient(1200px 600px at 80% -10%, #17335a33 20%, transparent 60%),
+        var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .container { max-width: 980px; margin: 40px auto; padding: 0 16px; }
+
+    .card {
+      background: linear-gradient(180deg, color-mix(in oklab, var(--card) 96%, #000 4%) 0%, var(--card) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.04);
+      padding: 24px;
+      transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    h1,h2,h3 { margin: 0 0 12px; }
+    .muted { color: var(--muted); }
+
+    .row { display: flex; gap: 12px; }
+    .row.center { align-items: center; justify-content: space-between; }
+
+    .btn {
+      appearance: none; border: 1px solid var(--border);
+      background: linear-gradient(180deg, color-mix(in oklab, var(--card) 80%, #415a86 20%) 0%, color-mix(in oklab, var(--card) 90%, #1a2740 10%) 100%);
+      color: var(--text); padding: 10px 14px; border-radius: 10px; cursor: pointer;
+    }
+    .btn[disabled] { opacity: 0.6; cursor: progress; }
+    .btn.primary { border-color: #2e5fb5; background: linear-gradient(180deg, #2f66c7 0%, #244e98 100%); color: #fff; }
+    .btn.success { border-color: #1a8a46; background: linear-gradient(180deg, #23b15a 0%, #1d8f4b 100%); color: #fff; }
+    .btn.danger { border-color: #aa2a2a; background: linear-gradient(180deg, #ef4444 0%, #b72d2d 100%); color: #fff; }
+    .btn.link { background: transparent; border-color: transparent; color: var(--muted); text-decoration: underline; padding: 8px 6px; }
+
+    .pill {
+      display: inline-block; padding: 6px 10px; border-radius: 999px; font-size: 12px; color: color-mix(in oklab, var(--text), #9ac 30%);
+      background: linear-gradient(180deg, color-mix(in oklab, var(--card), #254) 0%, color-mix(in oklab, var(--card), #122) 100%);
+      border: 1px solid var(--border);
     }
 
-    /* Theme tokens */
-    :root {
-      --brand-50: #ebf5ff;
-      --brand-400: #57a2ff;
-      --brand-500: #3a8bff;
-      --brand-600: #2e70d3;
-      --brand-700: #275ab0;
-      --brand-900: #1e3a8a;
-      --accent: #48bb78;
-      --card-bg: rgba(255,255,255,0.92);
-      --border: rgba(226,232,240,0.9);
-      --shadow: 0 18px 60px rgba(0,0,0,0.12);
-      --radius-lg: 20px;
-      --splash-min: 2200ms;
-      --text: #0f172a;
-      --text-muted: #334155;
-      --bg: #f8fafc;
-      --card: rgba(255,255,255,0.92);
-      --border-strong: rgba(226,232,240,0.9);
+    .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+    /* Forms */
+    .field { margin: 12px 0; }
+    label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%; background: var(--input); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 12px 12px; outline: none;
     }
-    html[data-theme="dark"] {
-      --text: #e5e7eb;
-      --text-muted: #cbd5e1;
-      --bg: #0b1220;
-      --card: rgba(17,24,39,0.78);
-      --border-strong: rgba(51,65,85,0.6);
+    input[type="file"] { color: var(--muted); }
+
+    /* Enhanced color picker */
+    .color-field { display: grid; grid-template-columns: 46px 1fr 110px; gap: 10px; align-items: center; }
+    .color-chip {
+      width: 46px; height: 38px; border-radius: 10px; border: 1px solid var(--border); background: var(--input);
+      display: grid; place-items: center; font-size: 11px; color: var(--muted);
+    }
+    .color-input {
+      width: 100%; background: var(--input); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 10px 12px;
+    }
+    .hex-input {
+      width: 110px; text-transform: uppercase; background: var(--input); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 10px 12px;
     }
 
-    .container { max-width: 950px; width: 100%; margin-inline: auto; padding: clamp(12px, 2vw, 20px); }
+    /* Password eye button */
+    .password-wrap { position: relative; }
+    .toggle-eye-btn {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 8px; border-radius: 8px; font-size: 13px; line-height: 1; color: var(--muted);
+      border: 1px solid var(--border); background: var(--input); cursor: pointer;
+    }
 
-    /* Splash */
-    .splash { position: fixed; inset: 0; z-index: 9999; background:
-      radial-gradient(1200px 800px at 20% 10%, rgba(58,139,255,0.08), transparent 60%),
-      radial-gradient(1000px 600px at 80% 80%, rgba(72,187,120,0.10), transparent 60%),
-      linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
-      display: grid; place-items: center; transition: opacity .6s ease, visibility .6s ease;
-      opacity: 0; animation: splash-fade-in 200ms ease forwards; visibility: visible; }
-    html[data-theme="dark"] .splash { background:
-      radial-gradient(1200px 800px at 20% 10%, rgba(58,139,255,0.10), transparent 60%),
-      radial-gradient(1000px 600px at 80% 80%, rgba(72,187,120,0.12), transparent 60%),
-      linear-gradient(135deg, #0b1220 0%, #0b1220 100%); }
-    .splash.hide { opacity: 0; visibility: hidden; }
-    @keyframes splash-fade-in { to { opacity: 1; } }
-    .splash-card { background: var(--card); border: 1px solid var(--border-strong); box-shadow: var(--shadow);
-      border-radius: 24px; padding: 28px 32px; display: flex; flex-direction: column; align-items: center; gap: 16px;
-      transform: translateY(6px); animation: splash-in .7s cubic-bezier(.2,.8,.2,1) both; backdrop-filter: blur(10px); }
-    @keyframes splash-in { 0% { opacity: 0; transform: translateY(20px) scale(.98);} 100% { opacity: 1; transform: translateY(0) scale(1);} }
-    .splash-logo { width: clamp(140px, 18vw, 220px); transform: scale(0.96); opacity: 0;
-      animation: logo-in 600ms cubic-bezier(.2,.8,.2,1) 120ms forwards, logo-glow 2400ms ease-in-out 800ms infinite; }
-    @keyframes logo-in { 0% { transform: scale(0.96); opacity: 0; filter: blur(1px);} 100% { transform: scale(1); opacity: 1; filter: none;} }
-    @keyframes logo-glow { 0%,100% { filter: drop-shadow(0 10px 30px rgba(58,139,255,0.20)); } 50% { filter: drop-shadow(0 16px 42px rgba(58,139,255,0.30)); } }
-    .splash-title { margin: 2px 0 0; font-weight: 900; letter-spacing: .3px; font-size: clamp(18px, 2.2vw, 22px); color: var(--text); text-align: center; display: inline-block; white-space: nowrap; }
-    .splash-title .char { display: inline-block; transform: translateY(6px); opacity: 0; animation: char-in 520ms cubic-bezier(.2,.8,.2,1) forwards; }
-    @keyframes char-in { 0% { transform: translateY(6px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
-    .splash-sub { margin: 0; font-size: 14px; color: var(--text-muted); text-align: center; font-weight: 700; }
-    .loader-ring { width: 44px; height: 44px; border: 3px solid #e2e8f0; border-top-color: var(--brand-500); border-radius: 50%; animation: spin .9s linear infinite; margin-top: 6px; }
-    @keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
-    .splash-progress { width: 180px; height: 6px; border-radius: 999px; background: #e5e7eb; overflow: hidden; position: relative; margin-top: 2px; }
-    .splash-progress::after { content: ''; position: absolute; inset: 0; width: 40%; background: linear-gradient(90deg, var(--brand-400), var(--brand-600)); animation: bar 1.4s ease-in-out infinite; border-radius: inherit; }
-    @keyframes bar { 0% { transform: translateX(-60%);} 50% { transform: translateX(20%);} 100% { transform: translateX(120%);} }
+    /* Logo preview */
+    .logo-box {
+      height: 84px; border: 1px dashed var(--border); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; background: var(--input); overflow: hidden;
+    }
+    .logo-box img { max-height: 84px; max-width: 100%; display: none; }
 
-    /* Header */
-    header.app-header { text-align: center; padding: 28px 20px; background: var(--card); border: 1px solid var(--border-strong);
-      border-radius: var(--radius-lg); box-shadow: var(--shadow); position: relative; overflow: hidden; margin: 18px 0 28px; }
-    header.app-header::before { content: ''; position: absolute; inset: 0; background:
-      radial-gradient(600px 200px at 50% 0%, rgba(58,139,255,0.10), transparent 60%),
-      linear-gradient(90deg, rgba(58,139,255,0.05), rgba(72,187,120,0.05)); pointer-events: none; }
-    .title { margin: 0 0 8px; font-weight: 900; font-size: clamp(22px, 3vw, 28px);
-      background: linear-gradient(135deg, var(--brand-700), var(--brand-500)); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: .2px; }
-    .tagline { margin: 0 auto 14px; max-width: 680px; color: var(--text-muted); font-size: clamp(14px, 1.8vw, 15px); padding-inline: 10px; font-weight: 700; }
-    .header-actions { display: inline-flex; gap: 10px; align-items: center; justify-content: center; margin-top: 10px; }
-    .lang-select { appearance: none; padding: 10px 40px 10px 14px; border-radius: 999px; border: 1.5px solid var(--border-strong);
-      background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.6' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") no-repeat right 12px center / 18px;
-      color: #334155; font-weight: 800; cursor: pointer; transition: border-color .25s ease, transform .2s ease, box-shadow .25s ease; }
-    html[data-theme="dark"] .lang-select { background: #0f172a; color: #e5e7eb; border-color: #334155; }
-    .lang-select:hover { transform: translateY(-1px); border-color: var(--brand-400); box-shadow: 0 6px 20px rgba(58,139,255,0.18); }
-    .lang-select:focus { outline: none; border-color: var(--brand-500); box-shadow: 0 0 0 4px rgba(58,139,255,0.15); }
-    .theme-toggle { appearance: none; width: 50px; height: 28px; border-radius: 999px; background: #e2e8f0; position: relative; cursor: pointer; border: 1px solid var(--border-strong); transition: background .2s ease, border-color .2s ease; }
-    .theme-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: transform .2s ease; }
-    .theme-toggle[data-mode="dark"] { background: #334155; }
-    .theme-toggle[data-mode="dark"]::after { transform: translateX(22px); }
-    .theme-icon { font-size: 14px; color: var(--text-muted); font-weight: 800; }
+    /* Alerts */
+    .alert { display: none; margin-top: 10px; padding: 10px 12px; border-radius: 10px; font-size: 14px; }
+    .alert.ok { background: color-mix(in oklab, #0d2b1b 80%, var(--accent) 20%); border: 1px solid #1b5e33; color: #b1f3c8; }
+    .alert.err { background: color-mix(in oklab, #2b0d0d 80%, var(--danger) 20%); border: 1px solid #5e1b1b; color: #f3b1b1; }
 
-    .card { background: var(--card); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: clamp(22px, 2.2vw, 36px); margin: 22px 0 28px; }
-
-    /* Form polish */
-    #formTitle { font-size: 22px !important; font-weight: 900 !important; letter-spacing: .2px; color: var(--text); }
-    .form-group { margin-bottom: 20px; }
-    label { display: inline-block; margin-bottom: 8px; font-size: 14.5px !important; font-weight: 900 !important; color: var(--text-muted); }
-    input[type="text"], input[type="date"], input[type="number"], select, textarea { width: 100%; border: 1.6px solid var(--border-strong); border-radius: 14px; background: #fff; color: var(--text); font-weight: 800; transition: border-color .18s ease, box-shadow .18s ease, background .18s ease; }
-    html[data-theme="dark"] input[type="text"], html[data-theme="dark"] input[type="date"], html[data-theme="dark"] input[type="number"], html[data-theme="dark"] select, html[data-theme="dark"] textarea { background: #0f172a; color: #e5e7eb; border-color: #334155; }
-    input[type="text"], input[type="date"], input[type="number"], select { height: 48px; padding: 0 16px; font-size: 16px; }
-    textarea#brief { min-height: 130px; max-height: 360px; resize: vertical; padding: 12px 14px; font-size: 16px !important; line-height: 1.7; }
-    ::placeholder { color: #64748b; font-weight: 800; opacity: .95; }
-    html[data-theme="dark"] ::placeholder { color: #94a3b8; }
-    .input-row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; }
-    .currency-select { height: 48px; }
-    #clientName { font-size: 16px !important; }
-    #clientName::placeholder { font-size: 16px; font-weight: 900; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--brand-500); box-shadow: 0 0 0 4px rgba(58,139,255,0.18); }
-    #generateBtn { width: 100%; height: 50px; border: none; border-radius: 14px; background: linear-gradient(135deg, var(--brand-600), var(--brand-500)); color: #fff; font-weight: 900; letter-spacing: .3px; box-shadow: 0 10px 28px rgba(58,139,255,0.25); transition: transform .12s ease, box-shadow .18s ease, filter .18s ease; }
-    #generateBtn:hover { transform: translateY(-1px); filter: brightness(1.03); }
-    #generateBtn:active { transform: translateY(0); filter: brightness(.98); }
-    .budget-note { margin-top: 6px; font-size: 12px; color: var(--text-muted); }
-    #preview #proposalContent { color: var(--text); font-weight: 700; }
-
-    /* Preview spacing to mirror exports */
-    #proposalContent p { margin: 10px 0; }
-    #proposalContent h3 { margin: 18px 0 8px; }
-    #proposalContent ul, #proposalContent ol { margin: 6px 0 12px 20px; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .loader-ring, .splash-progress::after { animation: none !important; }
-      .splash-card { animation: none !important; }
-      .splash-logo { animation: none !important; opacity: 1 !important; transform: none !important; }
-      .splash-title .char { animation: none !important; opacity: 1 !important; transform: none !important; }
+    /* Theme switch */
+    .theme-switch { display: inline-flex; gap: 8px; align-items: center; }
+    .theme-toggle {
+      border: 1px solid var(--border); background: var(--input); color: var(--text); padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 13px;
     }
   </style>
 </head>
 <body>
-  <!-- Classy Intro Splash -->
-  <div id="splash" class="splash" aria-hidden="true">
-    <div class="splash-card" role="status" aria-label="Loading ScopeBuilderAI">
-      <img src="/scopebuilderai-logo-v2.png" alt="ScopeBuilderAI" class="splash-logo" />
-      <h1 class="splash-title" id="splashTitle">Preparing your workspace…</h1>
-      <p class="splash-sub">Loading templates, pricing logic, and export tools</p>
-      <div class="loader-ring" aria-hidden="true"></div>
-      <div class="splash-progress" aria-hidden="true"></div>
+  <div class="container">
+    <div class="card">
+      <div class="row center">
+        <div>
+          <h1>ScopeBuilderAI <span class="pill">Admin</span></h1>
+          <div class="muted">White‑label settings for your agency</div>
+        </div>
+        <div class="row" style="gap:10px;">
+          <div class="theme-switch">
+            <button id="themeToggle" class="theme-toggle" type="button" title="Toggle light/dark">Dark</button>
+          </div>
+          <button id="logoutBtn" class="btn danger" style="display:none;">Log out</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Auth -->
+      <section id="authSection">
+        <h3>Sign in</h3>
+        <form id="loginForm" autocomplete="on">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@agency.com" required />
+          </div>
+          <div class="field password-wrap">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="••••••••" required />
+            <button id="toggleEye" class="toggle-eye-btn" type="button" aria-label="Show password">
+              <span id="eyeIcon">👁️</span>
+            </button>
+          </div>
+          <div class="row" style="align-items:center;">
+            <button class="btn primary" type="submit">Sign in</button>
+            <button id="forgotBtn" class="btn link" type="button">Forgot password?</button>
+          </div>
+          <div id="authError" class="alert err"></div>
+          <div id="resetInfo" class="alert ok"></div>
+        </form>
+      </section>
+
+      <!-- Admin dashboard -->
+      <section id="adminDashboard" style="display:none;">
+        <div class="grid-2">
+          <!-- Branding -->
+          <div>
+            <h3>Branding</h3>
+
+            <div class="field">
+              <label>Logo</label>
+              <div class="logo-box">
+                <img id="logoImg" alt="Logo preview" />
+                <span id="logoPlaceholder" class="muted">No logo uploaded</span>
+              </div>
+              <input id="logoFile" type="file" accept="image/*" onchange="previewLogo()" />
+            </div>
+
+            <div class="field">
+              <label for="siteTitle">Site title</label>
+              <input id="siteTitle" type="text" placeholder="ScopeBuilderAI" />
+            </div>
+
+            <div class="field">
+              <label for="tagline">Tagline</label>
+              <input id="tagline" type="text" placeholder="Professional Proposal Generator" />
+            </div>
+
+            <!-- Improved color pickers -->
+            <div class="field">
+              <label for="primaryColor">Primary color</label>
+              <div class="color-field">
+                <div class="color-chip" id="chipPrimary">A</div>
+                <input id="primaryColor" class="color-input" type="color" value="#1e3a8a" />
+                <input id="primaryHex" class="hex-input" type="text" value="#1E3A8A" maxlength="7" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="secondaryColor">Secondary color</label>
+              <div class="color-field">
+                <div class="color-chip" id="chipSecondary">B</div>
+                <input id="secondaryColor" class="color-input" type="color" value="#3a8bff" />
+                <input id="secondaryHex" class="hex-input" type="text" value="#3A8BFF" maxlength="7" />
+              </div>
+            </div>
+
+            <button id="saveBrandingBtn" class="btn success" onclick="saveBranding()">Save Branding</button>
+            <div id="brandingSuccess" class="alert ok">Branding saved.</div>
+            <div id="brandingError" class="alert err">Could not save branding.</div>
+          </div>
+
+          <!-- Settings -->
+          <div>
+            <h3>Settings</h3>
+            <div class="field">
+              <label for="agencyName">Agency name</label>
+              <input id="agencyName" type="text" placeholder="Acme Studio" />
+            </div>
+            <div class="field">
+              <label for="customDomain">Custom domain (optional)</label>
+              <input id="customDomain" type="text" placeholder="agency.example.com" />
+            </div>
+            <button id="saveSettingsBtn" class="btn success" onclick="saveSettings()">Save Settings</button>
+            <div id="settingsSuccess" class="alert ok">Settings saved.</div>
+            <div id="settingsError" class="alert err">Could not save settings.</div>
+
+            <div class="divider"></div>
+
+            <h3>Preview</h3>
+            <div class="card" style="padding:16px;">
+              <h2 id="previewTitle" style="color:#1e3a8a;">ScopeBuilderAI</h2>
+              <div id="previewTagline" class="muted">Professional Proposal Generator</div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 
-  <div class="container">
-    <header class="app-header">
-      <h1 class="title">ScopeBuilderAI</h1>
-      <p class="tagline">Generate professional proposals in minutes for Web Development and Content Writing.</p>
-      <div class="header-actions" aria-label="Header controls">
-        <span class="theme-icon" aria-hidden="true">☀️</span>
-        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme" data-mode="light"></button>
-        <span class="theme-icon" aria-hidden="true">🌙</span>
+  <!-- Firebase SDKs: v10 compat (CSP‑friendly) -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-storage-compat.js"></script>
 
-        <select id="langToggle" class="lang-select" aria-label="Language Selection">
-          <option value="en">🇺🇸 English</option>
-          <option value="hi">🇮🇳 हिंदी</option>
-        </select>
-      </div>
-    </header>
-
-    <!-- Form Section -->
-    <section class="card" id="formSection" aria-labelledby="formTitle">
-      <h2 id="formTitle">Create New Proposal</h2>
-
-      <form id="proposalForm" novalidate>
-        <div class="form-group">
-          <label for="clientName">Client Name *</label>
-          <input type="text" id="clientName" placeholder="e.g., ABC Marketing Agency" required />
-          <div class="error-message" id="clientNameError" style="display:none;color:#dc2626;font-size:12px;margin-top:6px;">Please enter the client name</div>
-        </div>
-
-        <div class="form-group">
-          <label for="brief">Project Brief *</label>
-          <textarea id="brief" required placeholder="Describe the project requirements, goals, target audience, and key deliverables..."></textarea>
-          <div class="error-message" id="briefError" style="display:none;color:#dc2626;font-size:12px;margin-top:6px;">Please provide project details (minimum 20 characters)</div>
-        </div>
-
-        <div class="form-group">
-          <label for="budget">Estimated Budget</label>
-          <div class="input-row">
-            <select id="currency" class="currency-select" aria-label="Currency">
-              <option value="INR" selected>INR ₹</option>
-              <option value="USD">USD $</option>
-              <option value="EUR">EUR €</option>
-            </select>
-            <input type="number" id="budget" min="100" max="10000000" placeholder="e.g., 5000" step="100" class="money-input" />
-          </div>
-          <div id="budgetNote" class="budget-note"></div>
-        </div>
-
-        <div class="form-group">
-          <label for="deadline">Preferred Deadline</label>
-          <input type="date" id="deadline" />
-        </div>
-
-        <div class="form-group">
-          <label for="vertical">Service Type *</label>
-          <select id="vertical" required>
-            <option value="">Select Service Type</option>
-            <option value="web">🌐 Web Development</option>
-            <option value="content">✍️ Content Writing</option>
-          </select>
-          <div class="error-message" id="verticalError" style="display:none;color:#dc2626;font-size:12px;margin-top:6px;">Please select a service type</div>
-        </div>
-
-        <button type="button" id="generateBtn">🚀 Generate Professional Proposal</button>
-
-        <div id="loadingMessage" style="display:none;background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;padding:12px 14px;border-radius:12px;margin-top:16px;font-weight:800;">
-          Generating your customized proposal... This may take a moment.
-        </div>
-      </form>
-    </section>
-
-    <!-- Preview Section -->
-    <section id="preview" class="card" aria-labelledby="previewTitle" style="display:none;border-top:5px solid var(--brand-500);">
-      <div class="preview-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-strong);">
-        <h2 id="previewTitle" style="margin:0;font-size:22px;font-weight:900;background:linear-gradient(135deg,var(--brand-700),var(--brand-500));-webkit-background-clip:text;background-clip:text;color:transparent;">Your Professional Proposal</h2>
-        <span id="statusBadge" style="background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:900;">Ready to Review</span>
-      </div>
-      <div id="proposalContent" style="font-size:15px;line-height:1.65;"></div>
-    </section>
-
-    <!-- Export Section -->
-    <section class="card" id="exportSection" aria-labelledby="exportTitle" style="display:none;">
-      <h3 id="exportTitle" style="margin-top:0;">Ready to Share Your Proposal?</h3>
-      <p style="color:var(--text-muted);margin:8px 0 18px;font-size:14px;font-weight:700;">Export your customized proposal in professional formats</p>
-      <div class="export-buttons" style="display:flex;gap:14px;flex-wrap:wrap;">
-        <button id="copyBtn" style="flex:1 1 240px;min-width:220px;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 22px;border-radius:999px;border:1.5px solid var(--border-strong);background:#fff;color:var(--brand-700);">
-          <span>📋</span><span>Copy to Clipboard (Google Docs)</span>
-        </button>
-        <button id="pdfBtn" style="flex:1 1 240px;min-width:220px;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 22px;border-radius:999px;border:none;background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;">
-          <span>📄</span><span>Download PDF (Client Ready)</span>
-        </button>
-      </div>
-      <div style="margin-top:16px;padding:12px;border-left:4px solid var(--brand-500);background:#f8fafc;border-radius:12px;">
-        <small style="color:#64748b;font-weight:700;">💡 <strong>Pro Tip:</strong> Customize the final proposal with your branding and contact details before sending to clients.</small>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="card" aria-label="Footer" style="text-align:center;">
-      <p style="margin:0 0 6px;color:var(--text-muted);font-size:13px;font-weight:700;">This AI-generated proposal is a professional starting point. Please review and customize with your specific branding, pricing details, and legal terms.</p>
-      <p style="margin:0;color:#94a3b8;font-size:12px;font-weight:700;">© 2025 ScopeBuilderAI • Built with ❤️ for Freelancers Worldwide •
-        <a href="#" style="color:var(--brand-600);text-decoration:none;">Privacy Policy</a> |
-        <a href="#" style="color:var(--brand-600);text-decoration:none;">Terms of Use</a>
-      </p>
-    </footer>
-  </div>
-
-  <!-- Export engines -->
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-
-  <!-- Scripts -->
+  <!-- Initialize Firebase (single init) -->
   <script>
-    // Split text for splash
-    function splitToChars(el) {
-      if (!el) return;
-      const t = el.textContent; el.textContent = '';
-      [...t].forEach((ch, i) => {
-        const s = document.createElement('span');
-        s.className = 'char'; s.style.animationDelay = (160 + i * 28) + 'ms'; s.textContent = ch;
-        el.appendChild(s);
+    const firebaseConfig = {
+      apiKey: "AIzaSyDadaImEVf-rdcEPlza_UR3Kp--52wQbhI",
+      authDomain: "scopebuilderai.firebaseapp.com",
+      projectId: "scopebuilderai",
+      storageBucket: "scopebuilderai.firebasestorage.app",
+      messagingSenderId: "471021428025",
+      appId: "1:471021428025:web:8246535fe30b2854701ce8"
+    };
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    // Avoid WebChannel + CSP issues
+    try { db.settings({ experimentalForceLongPolling: true, merge: true }); } catch(e){}
+  </script>
+
+  <!-- Admin logic -->
+  <script>
+    // THEME
+    const themeToggle = document.getElementById('themeToggle');
+    function applyTheme(t){ document.documentElement.setAttribute('data-theme', t); themeToggle.textContent = t === 'dark' ? 'Dark' : 'Light'; localStorage.setItem('sbai-theme', t); }
+    applyTheme(localStorage.getItem('sbai-theme') || 'dark');
+    themeToggle.addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+    });
+
+    // UI helpers
+    function flash(id) { const el = document.getElementById(id); if (!el) return; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 1800); }
+    function setVal(id, val) { const el = document.getElementById(id); if (el != null) el.value = val; }
+    function updatePreview() {
+      document.getElementById('previewTitle').textContent = document.getElementById('siteTitle').value || 'ScopeBuilderAI';
+      document.getElementById('previewTagline').textContent = document.getElementById('tagline').value || 'Professional Proposal Generator';
+      const pc = document.getElementById('primaryColor').value || '#1e3a8a';
+      document.getElementById('previewTitle').style.color = pc;
+    }
+    function validateHex(v){ return /^#([0-9a-f]{6})$/i.test(v); }
+    function syncColorControls(which){
+      const picker = document.getElementById(which + 'Color');
+      const hex = document.getElementById(which + 'Hex');
+      const chip = document.getElementById('chip' + (which === 'primary' ? 'Primary' : 'Secondary'));
+      const toHex = (val) => val.toUpperCase();
+      picker.addEventListener('input', () => { hex.value = toHex(picker.value); chip.style.background = picker.value; updatePreview(); });
+      hex.addEventListener('input', () => {
+        const v = hex.value.startsWith('#') ? hex.value : '#'+hex.value;
+        if (validateHex(v)) { picker.value = v; chip.style.background = v; updatePreview(); }
       });
+      // init
+      hex.value = toHex(picker.value);
+      chip.style.background = picker.value;
     }
 
-    // Splash timing
-    (function () {
-      const splash = document.getElementById('splash');
-      const title = document.getElementById('splashTitle');
-      if (title) splitToChars(title);
-      if (!splash) return;
-      const MIN = 2200; let loadDone = false, timeDone = false;
-      setTimeout(() => { timeDone = true; hide(); }, MIN);
-      window.addEventListener('load', () => { loadDone = true; hide(); });
-      function hide(){ if (loadDone && timeDone){ splash.classList.add('hide'); setTimeout(()=>splash.remove(),900); } }
-      setTimeout(() => { if (splash?.isConnected){ splash.classList.add('hide'); setTimeout(()=>splash.remove(),900);} }, 8000);
-    })();
-
-    // Theme
-    (function(){
-      const key='sbai-theme'; const html=document.documentElement; const btn=document.getElementById('themeToggle');
-      function apply(m){ html.setAttribute('data-theme',m); btn?.setAttribute('data-mode',m); try{localStorage.setItem(key,m);}catch{} }
-      const saved=(()=>{try{return localStorage.getItem(key);}catch{return null;}})();
-      const prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
-      apply(saved|| (prefersDark?'dark':'light'));
-      btn?.addEventListener('click',()=>apply(html.getAttribute('data-theme')==='dark'?'light':'dark'));
-      if(!saved&&window.matchMedia){ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',e=>apply(e.matches?'dark':'light')); }
-    })();
-
-    // Translations
-    const translations={en:{formTitle:'Create New Proposal',statusReady:'Ready to Review',exportQ:'Ready to Share Your Proposal?',copy:'Copy to Clipboard (Google Docs)',pdf:'Download PDF (Client Ready)'},
-                        hi:{formTitle:'नया प्रस्ताव बनाएं',statusReady:'समीक्षा के लिए तैयार',exportQ:'क्या आपका प्रस्ताव साझा करने के लिए तैयार है?',copy:'क्लिपबोर्ड में कॉपी करें (Google Docs)',pdf:'PDF डाउनलोड करें (ग्राहक हेतु तैयार)'}};
-    const langToggle=document.getElementById('langToggle');
-    function applyLang(l){const t=translations[l]||translations.en; const m=(id,txt)=>{const el=document.getElementById(id); if(el) el.textContent=txt;};
-      m('formTitle',t.formTitle); m('statusBadge',t.statusReady); m('exportTitle',t.exportQ);
-      const c=document.getElementById('copyBtn'); const p=document.getElementById('pdfBtn');
-      if(c) c.lastElementChild.textContent=t.copy; if(p) p.lastElementChild.textContent=t.pdf;}
-    if(langToggle){ applyLang(langToggle.value||'en'); langToggle.addEventListener('change',e=>applyLang(e.target.value)); }
-
-    // Form refs
-    const clientName=document.getElementById('clientName');
-    const brief=document.getElementById('brief');
-    const vertical=document.getElementById('vertical');
-    const loadingMessage=document.getElementById('loadingMessage');
-    const proposalContent=document.getElementById('proposalContent');
-
-    // Currency helpers
-    const currencySelect=document.getElementById('currency');
-    const budgetInput=document.getElementById('budget');
-    const budgetNote=document.getElementById('budgetNote');
-    const currencyLocales={INR:'en-IN',USD:'en-US',EUR:'de-DE'};
-    function formatMoney(v,c){const loc=currencyLocales[c]||'en-US'; try{return new Intl.NumberFormat(loc,{style:'currency',currency:c,maximumFractionDigits:0}).format(v||0);}catch{return (v||0).toLocaleString(loc)+' '+c;}}
-    function updateBudgetNote(){const c=currencySelect?.value||'INR'; const v=Number(budgetInput?.value||0); if(budgetNote) budgetNote.textContent=v?('Entered: '+formatMoney(v,c)) : '';}
-    currencySelect?.addEventListener('change',updateBudgetNote); budgetInput?.addEventListener('input',updateBudgetNote);
-
-    // Validation
-    function show(id){const el=document.getElementById(id); if(el) el.style.display='block';}
-    function hide(id){const el=document.getElementById(id); if(el) el.style.display='none';}
-    function validateForm(){let ok=true; if(!clientName.value.trim()){show('clientNameError'); ok=false;} else hide('clientNameError');
-      if(!brief.value.trim()||brief.value.trim().length<20){show('briefError'); ok=false;} else hide('briefError');
-      if(!vertical.value){show('verticalError'); ok=false;} else hide('verticalError'); return ok;}
-
-    // Generators
-    function generateScope(s){ if(s==='web'){ return `
-      <h3>Scope of Work</h3>
-      <ul>
-        <li>Discovery, requirements, and IA</li>
-        <li>UI/UX wireframes and high-fidelity design</li>
-        <li>Responsive frontend (HTML/CSS/JS)</li>
-        <li>Backend and database (as needed)</li>
-        <li>Testing, QA, and performance optimization</li>
-        <li>Deployment and handover</li>
-      </ul>`; }
-      return `
-      <h3>Scope of Work</h3>
-      <ul>
-        <li>Content outline and tone alignment</li>
-        <li>Drafting with research and SEO basics</li>
-        <li>Two revision cycles</li>
-        <li>Proofreading and final polish</li>
-      </ul>`; }
-
-    function generateMilestones(s){ return `
-      <h3>Project Milestones & Timeline</h3>
-      <ol>
-        <li>Kickoff & Discovery — Week 1</li>
-        <li>${s==='web'?'Design & Frontend':'Drafting & Review'} — Weeks 2–3</li>
-        <li>${s==='web'?'Backend & Integration':'Revisions & Final'} — Weeks 3–4</li>
-        <li>QA, Handover & Launch — Final Week</li>
-      </ol>`; }
-
-    function injectBudgetNoteIntoPreview(b, c){ const f=formatMoney(Number(b||0),c); return `<p>Approx. client budget noted: <strong>${f}</strong></p>`; }
-
-    function generatePricing(b, s, c){
-      const baseINR = s==='web'
-        ? [{lo:25000,hi:45000,label:'Starter (Landing)'},
-           {lo:60000,hi:110000,label:'Growth (Multi-page)'},
-           {lo:150000,hi:null,label:'Pro (Custom + Admin)'}]
-        : [{lo:2000,hi:5000,label:'Blog/Article (per piece)'},
-           {lo:15000,hi:40000,label:'Website Copy (per section)'},
-           {lo:20000,hi:60000,label:'Long-form/Whitepaper'}];
-      const fx={INR:1,USD:0.012,EUR:0.011}; const rate=fx[c]||1;
-      const fmt=(n)=>formatMoney(Math.round(n),c);
-      const items=baseINR.map(t=> t.hi===null ? `<li>${t.label} — ${fmt(t.lo*rate)}+</li>` : `<li>${t.label} — ${fmt(t.lo*rate)}–${fmt(t.hi*rate)}</li>` ).join('');
-      const note=b?injectBudgetNoteIntoPreview(b,c):'';
-      return `<h3>Investment Options</h3><ul>${items}</ul>${note}`; }
-
-    function generateNextSteps(){ return `
-      <h3>Next Steps</h3>
-      <ul>
-        <li>Confirm scope and timeline</li>
-        <li>Sign-off and advance to start</li>
-        <li>Kickoff call and project workspace</li>
-      </ul>`; }
-
-    // Generate
-    const generateBtn=document.getElementById('generateBtn');
-    if(generateBtn){
-      generateBtn.addEventListener('click',()=>{
-        if(!validateForm()) return;
-        loadingMessage.style.display='block';
-        setTimeout(()=>{
-          const name=clientName.value.trim();
-          const service=vertical.value;
-          const budgetVal=document.getElementById('budget').value;
-          const ccy=document.getElementById('currency').value;
-
-          const intro = `<p>Dear <strong>${name}</strong>,</p><p>Thank you for considering our services. Based on your project brief, we propose the following solution tailored to your needs.</p>`;
-
-          const content=[intro, generateScope(service), generateMilestones(service), generatePricing(budgetVal,service,ccy), generateNextSteps(), `<p style="margin-top:16px;">Best regards,<br><strong>Your Freelance Team</strong></p>`].join('');
-
-          proposalContent.innerHTML=content;
-          document.getElementById('preview').style.display='block';
-          document.getElementById('exportSection').style.display='block';
-          loadingMessage.style.display='none';
-          document.getElementById('preview').scrollIntoView({behavior:'smooth', block:'start'});
-        },700);
-      });
+    // Logo preview
+    function previewLogo() {
+      const file = document.getElementById('logoFile').files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.getElementById('logoImg');
+        img.src = e.target.result;
+        img.style.display = 'block';
+        document.getElementById('logoPlaceholder').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
     }
+    window.previewLogo = previewLogo;
 
-    // Copy with preserved spacing (HTML + Plain Text)
-    const copyBtn=document.getElementById('copyBtn');
-    if(copyBtn){
-      copyBtn.addEventListener('click', async ()=>{
-        const html=document.getElementById('proposalContent').innerHTML;
-        const tmp=document.createElement('div'); tmp.innerHTML=html;
-        tmp.querySelectorAll('h1,h2,h3,p,li').forEach(el=>{ if(!el.textContent.endsWith('\n')) el.textContent+='\n'; });
-        const text=tmp.innerText.replace(/\n{3,}/g,'\n\n').trim();
-        try{
-          await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([html],{type:'text/html'}), 'text/plain': new Blob([text],{type:'text/plain'})})]);
-          copyBtn.style.transform='translateY(-2px)'; setTimeout(()=>copyBtn.style.transform='',200);
-        }catch{
-          const range=document.createRange(); range.selectNodeContents(document.getElementById('proposalContent'));
-          const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range); document.execCommand('copy'); sel.removeAllRanges();
-        }
-      });
-    }
+    // Password toggle (compact & visible)
+    const passEl = document.getElementById('password');
+    const eyeBtn = document.getElementById('toggleEye');
+    const eyeIcon = document.getElementById('eyeIcon');
+    eyeBtn.addEventListener('click', () => {
+      const isPwd = passEl.type === 'password';
+      passEl.type = isPwd ? 'text' : 'password';
+      eyeIcon.textContent = isPwd ? '🙈' : '👁️';
+      eyeBtn.setAttribute('aria-label', isPwd ? 'Hide password' : 'Show password');
+    });
 
-    // True PDF download via html2canvas + jsPDF
-    const pdfBtn=document.getElementById('pdfBtn');
-    if(pdfBtn){
-      pdfBtn.addEventListener('click', async ()=>{
-        const { jsPDF } = window.jspdf || {};
-        if(!jsPDF){ alert('PDF engine failed to load. Try again.'); return; }
+    // Forgot password
+    const forgotBtn = document.getElementById('forgotBtn');
+    const resetInfo = document.getElementById('resetInfo');
+    const authError = document.getElementById('authError');
+    forgotBtn.addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim();
+      resetInfo.style.display = 'none'; authError.style.display = 'none';
+      if (!email) { authError.textContent = 'Enter your email, then click “Forgot password?”.'; authError.style.display = 'block'; return; }
+      try { await auth.sendPasswordResetEmail(email); resetInfo.textContent = 'Password reset email sent.'; resetInfo.style.display = 'block'; }
+      catch (e) { authError.textContent = e.message; authError.style.display = 'block'; }
+    });
 
-        const node=document.getElementById('proposalContent');
-        const wrap=document.createElement('div');
-        wrap.style.padding='24px'; wrap.style.background='#ffffff'; wrap.style.color='#111827';
-        wrap.style.fontFamily="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
-        wrap.appendChild(node.cloneNode(true));
-        document.body.appendChild(wrap); window.scrollTo(0,0);
+    // Auth state
+    const authSection = document.getElementById('authSection');
+    const adminDashboard = document.getElementById('adminDashboard');
+    const logoutBtn = document.getElementById('logoutBtn');
 
-        const canvas=await html2canvas(wrap,{ scale:2, backgroundColor:'#ffffff' });
-        document.body.removeChild(wrap);
+    let currentUser = null;
+    let currentAgencyId = null;
 
-        const imgData=canvas.toDataURL('image/png');
-        const pdf=new jsPDF('p','pt','a4');
-        const pageW=pdf.internal.pageSize.getWidth();
-        const pageH=pdf.internal.pageSize.getHeight();
-        const margin=30, imgW=pageW - margin*2, imgH=canvas.height * (imgW / canvas.width);
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        currentUser = user;
+        currentAgencyId = user.uid;
+        authSection.style.display = 'none';
+        adminDashboard.style.display = 'block';
+        logoutBtn.style.display = 'inline-block';
+        await loadAgencyData();
+      } else {
+        currentUser = null; currentAgencyId = null;
+        authSection.style.display = 'block';
+        adminDashboard.style.display = 'none';
+        logoutBtn.style.display = 'none';
+      }
+    });
 
-        if(imgH <= pageH - margin*2){
-          pdf.addImage(imgData,'PNG',margin,margin,imgW,imgH,undefined,'FAST');
-        }else{
-          let heightLeft=imgH, position=margin, page=0;
-          while(heightLeft > 0){
-            if(page>0) pdf.addPage();
-            pdf.addImage(imgData,'PNG',margin,position,imgW,imgH,undefined,'FAST');
-            heightLeft -= (pageH - margin*2);
-            position -= (pageH - margin*2);
-            page++;
+    // Login
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      authError.style.display = 'none'; resetInfo.style.display = 'none';
+      const email = document.getElementById('email').value.trim();
+      const password = passEl.value.trim();
+      try { await auth.signInWithEmailAndPassword(email, password); authError.textContent = ''; }
+      catch (err) { authError.textContent = err.message; authError.style.display = 'block'; }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', async () => { await auth.signOut(); });
+
+    // Load agency doc
+    async function loadAgencyData() {
+      try {
+        const ref = db.collection('agencies').doc(currentAgencyId);
+        const snap = await ref.get();
+        if (snap.exists) {
+          const d = snap.data();
+          setVal('siteTitle', d.siteTitle || 'ScopeBuilderAI');
+          setVal('tagline', d.tagline || 'Professional Proposal Generator');
+          setVal('agencyName', d.agencyName || '');
+          setVal('customDomain', d.customDomain || '');
+          const pc = (d.primaryColor || '#1e3a8a').toLowerCase();
+          const sc = (d.secondaryColor || '#3a8bff').toLowerCase();
+          document.getElementById('primaryColor').value = pc;
+          document.getElementById('secondaryColor').value = sc;
+          document.getElementById('primaryHex').value = pc.toUpperCase();
+          document.getElementById('secondaryHex').value = sc.toUpperCase();
+          document.getElementById('chipPrimary').style.background = pc;
+          document.getElementById('chipSecondary').style.background = sc;
+          if (d.logoUrl) {
+            const img = document.getElementById('logoImg');
+            img.src = d.logoUrl; img.style.display = 'block';
+            document.getElementById('logoPlaceholder').style.display = 'none';
           }
+          updatePreview();
+        } else {
+          await ref.set({ siteTitle: 'ScopeBuilderAI', tagline: 'Professional Proposal Generator' }, { merge: true });
         }
-        pdf.save('ScopeBuilderAI_Proposal.pdf');
-      });
+      } catch (e) {
+        console.error('loadAgencyData failed', e);
+      }
     }
+
+    // Save branding WITH loading state + toasts
+    async function saveBranding() {
+      const btn = document.getElementById('saveBrandingBtn');
+      const ok = document.getElementById('brandingSuccess');
+      const err = document.getElementById('brandingError');
+      try {
+        btn.disabled = true; btn.textContent = 'Saving...';
+        let logoUrl = '';
+        const file = document.getElementById('logoFile').files[0];
+        if (file) {
+          const ref = storage.ref(`logos/${auth.currentUser.uid}/${file.name}`);
+          await ref.put(file);
+          logoUrl = await ref.getDownloadURL();
+        }
+        const payload = {
+          siteTitle: document.getElementById('siteTitle').value.trim(),
+          tagline: document.getElementById('tagline').value.trim(),
+          primaryColor: document.getElementById('primaryColor').value,
+          secondaryColor: document.getElementById('secondaryColor').value
+        };
+        if (logoUrl) payload.logoUrl = logoUrl;
+        await db.collection('agencies').doc(auth.currentUser.uid).set(payload, { merge: true });
+        updatePreview();
+        ok.textContent = 'Branding saved successfully.'; ok.style.display = 'block'; err.style.display = 'none';
+        setTimeout(()=> ok.style.display='none', 1800);
+      } catch (e) {
+        console.error('saveBranding failed', e);
+        err.textContent = e.message || 'Could not save branding.'; err.style.display = 'block';
+      } finally {
+        btn.disabled = false; btn.textContent = 'Save Branding';
+      }
+    }
+    window.saveBranding = saveBranding;
+
+    // Save settings WITH loading state + toasts
+    async function saveSettings() {
+      const btn = document.getElementById('saveSettingsBtn');
+      const ok = document.getElementById('settingsSuccess');
+      const err = document.getElementById('settingsError');
+      try {
+        btn.disabled = true; btn.textContent = 'Saving...';
+        await db.collection('agencies').doc(auth.currentUser.uid).set({
+          agencyName: document.getElementById('agencyName').value.trim(),
+          customDomain: document.getElementById('customDomain').value.trim()
+        }, { merge: true });
+        ok.textContent = 'Settings saved successfully.'; ok.style.display = 'block'; err.style.display = 'none';
+        setTimeout(()=> ok.style.display='none', 1800);
+      } catch (e) {
+        console.error('saveSettings failed', e);
+        err.textContent = e.message || 'Could not save settings.'; err.style.display = 'block';
+      } finally {
+        btn.disabled = false; btn.textContent = 'Save Settings';
+      }
+    }
+    window.saveSettings = saveSettings;
+
+    // Initialize enhanced color controls
+    syncColorControls('primary');
+    syncColorControls('secondary');
+    document.getElementById('primaryColor').addEventListener('change', updatePreview);
+    document.getElementById('secondaryColor').addEventListener('change', updatePreview);
   </script>
 </body>
 </html>
