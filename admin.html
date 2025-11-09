@@ -5,127 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ScopeBuilderAI — Admin</title>
   <link rel="icon" href="favicon.ico" />
+
   <style>
-    :root {
-      --bg: #0b1220;
-      --card: #121a2a;
-      --muted: #7b8aa5;
-      --text: #e6eeff;
-      --primary: #3a8bff;
-      --accent: #22c55e;
-      --danger: #ef4444;
-      --border: #1f2a44;
-      --input: #0b1322;
-      --shadow: rgba(0,0,0,0.4);
-    }
-    html[data-theme="light"] {
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --muted: #5a6b87;
-      --text: #0f172a;
-      --primary: #1e3a8a;
-      --accent: #16a34a;
-      --danger: #dc2626;
-      --border: #e5e7eb;
-      --input: #f8fafc;
-      --shadow: rgba(0,0,0,0.06);
-    }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
+    :root { --bg:#0b1220; --card:#121a2a; --muted:#7b8aa5; --text:#e6eeff; --primary:#3a8bff; --accent:#22c55e; --danger:#ef4444; --border:#1f2a44; --input:#0b1322; --shadow:rgba(0,0,0,0.4) }
+    html[data-theme="light"] { --bg:#f5f7fb; --card:#fff; --muted:#5a6b87; --text:#0f172a; --primary:#1e3a8a; --accent:#16a34a; --danger:#dc2626; --border:#e5e7eb; --input:#f8fafc; --shadow:rgba(0,0,0,0.06) }
+    html,body{height:100%}
+    body{
+      margin:0;
       background:
         radial-gradient(1200px 600px at 20% -10%, #17335a33 20%, transparent 60%),
         radial-gradient(1200px 600px at 80% -10%, #17335a33 20%, transparent 60%),
         var(--bg);
-      color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      transition: background 0.2s ease, color 0.2s ease;
+      color:var(--text);
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica Neue,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      transition:background .2s,color .2s;
     }
-    .container { max-width: 980px; margin: 40px auto; padding: 0 16px; }
-
-    .card {
-      background: linear-gradient(180deg, color-mix(in oklab, var(--card) 96%, #000 4%) 0%, var(--card) 100%);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: 0 10px 30px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.04);
-      padding: 24px;
-      transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
-
-    h1,h2,h3 { margin: 0 0 12px; }
-    .muted { color: var(--muted); }
-
-    .row { display: flex; gap: 12px; }
-    .row.center { align-items: center; justify-content: space-between; }
-
-    .btn {
-      appearance: none; border: 1px solid var(--border);
-      background: linear-gradient(180deg, color-mix(in oklab, var(--card) 80%, #415a86 20%) 0%, color-mix(in oklab, var(--card) 90%, #1a2740 10%) 100%);
-      color: var(--text); padding: 10px 14px; border-radius: 10px; cursor: pointer;
-    }
-    .btn.primary { border-color: #2e5fb5; background: linear-gradient(180deg, #2f66c7 0%, #244e98 100%); color: #fff; }
-    .btn.success { border-color: #1a8a46; background: linear-gradient(180deg, #23b15a 0%, #1d8f4b 100%); color: #fff; }
-    .btn.danger { border-color: #aa2a2a; background: linear-gradient(180deg, #ef4444 0%, #b72d2d 100%); color: #fff; }
-    .btn.link { background: transparent; border-color: transparent; color: var(--muted); text-decoration: underline; padding: 8px 6px; }
-
-    .pill {
-      display: inline-block; padding: 6px 10px; border-radius: 999px; font-size: 12px; color: color-mix(in oklab, var(--text), #9ac 30%);
-      background: linear-gradient(180deg, color-mix(in oklab, var(--card), #254) 0%, color-mix(in oklab, var(--card), #122) 100%);
-      border: 1px solid var(--border);
-    }
-
-    .divider { height: 1px; background: var(--border); margin: 16px 0; }
-
-    /* Forms */
-    .field { margin: 12px 0; }
-    label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
-    input[type="text"], input[type="email"], input[type="password"] {
-      width: 100%; background: var(--input); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 12px 12px; outline: none;
-    }
-    input[type="file"] { color: var(--muted); }
-
-    /* Enhanced color picker */
-    .color-field { display: grid; grid-template-columns: 46px 1fr 110px; gap: 10px; align-items: center; }
-    .color-chip {
-      width: 46px; height: 38px; border-radius: 10px; border: 1px solid var(--border); background: var(--input);
-      display: grid; place-items: center; font-size: 11px; color: var(--muted);
-    }
-    .color-input {
-      width: 100%; background: var(--input); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 10px 12px;
-    }
-    .hex-input {
-      width: 110px; text-transform: uppercase; background: var(--input); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 10px 12px;
-    }
-
-    /* Password eye button */
-    .password-wrap { position: relative; }
-    .toggle-eye-btn {
-      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 8px; border-radius: 8px; font-size: 13px; line-height: 1; color: var(--muted);
-      border: 1px solid var(--border); background: var(--input); cursor: pointer;
-    }
-
-    /* Logo preview */
-    .logo-box {
-      height: 84px; border: 1px dashed var(--border); border-radius: 12px;
-      display: flex; align-items: center; justify-content: center; background: var(--input); overflow: hidden;
-    }
-    .logo-box img { max-height: 84px; max-width: 100%; display: none; }
-
-    /* Alerts */
-    .alert { display: none; margin-top: 10px; padding: 10px 12px; border-radius: 10px; font-size: 14px; }
-    .alert.ok { background: color-mix(in oklab, #0d2b1b 80%, var(--accent) 20%); border: 1px solid #1b5e33; color: #b1f3c8; }
-    .alert.err { background: color-mix(in oklab, #2b0d0d 80%, var(--danger) 20%); border: 1px solid #5e1b1b; color: #f3b1b1; }
-
-    /* Theme switch */
-    .theme-switch { display: inline-flex; gap: 8px; align-items: center; }
-    .theme-toggle {
-      border: 1px solid var(--border); background: var(--input); color: var(--text); padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 13px;
-    }
+    .container{max-width:980px;margin:40px auto;padding:0 16px}
+    .card{background:linear-gradient(180deg,color-mix(in oklab,var(--card) 96%,#000 4%) 0%,var(--card) 100%);border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 30px var(--shadow),inset 0 1px 0 rgba(255,255,255,.04);padding:24px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    @media (max-width:900px){.grid-2{grid-template-columns:1fr}}
+    h1,h2,h3{margin:0 0 12px}
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:12px}
+    .row.center{align-items:center;justify-content:space-between}
+    .btn{appearance:none;border:1px solid var(--border);background:linear-gradient(180deg,color-mix(in oklab,var(--card) 80%,#415a86 20%) 0%,color-mix(in oklab,var(--card) 90%,#1a2740 10%) 100%);color:var(--text);padding:10px 14px;border-radius:10px;cursor:pointer}
+    .btn[disabled]{opacity:.6;cursor:progress}
+    .btn.primary{border-color:#2e5fb5;background:linear-gradient(180deg,#2f66c7 0%,#244e98 100%);color:#fff}
+    .btn.success{border-color:#1a8a46;background:linear-gradient(180deg,#23b15a 0%,#1d8f4b 100%);color:#fff}
+    .btn.danger{border-color:#aa2a2a;background:linear-gradient(180deg,#ef4444 0%,#b72d2d 100%);color:#fff}
+    .btn.link{background:transparent;border-color:transparent;color:var(--muted);text-decoration:underline;padding:8px 6px}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;color:color-mix(in oklab,var(--text),#9ac 30%);background:linear-gradient(180deg,color-mix(in oklab,var(--card),#254) 0%,color-mix(in oklab,var(--card),#122) 100%);border:1px solid var(--border)}
+    .divider{height:1px;background:var(--border);margin:16px 0}
+    .field{margin:12px 0}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input[type="text"],input[type="email"],input[type="password"]{width:100%;background:var(--input);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px}
+    input[type="file"]{color:var(--muted)}
+    .color-field{display:grid;grid-template-columns:46px 1fr 110px;gap:10px;align-items:center}
+    .color-chip{width:46px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--input);display:grid;place-items:center;font-size:11px;color:var(--muted)}
+    .color-input{width:100%;background:var(--input);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 12px}
+    .hex-input{width:110px;text-transform:uppercase;background:var(--input);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 12px}
+    .password-wrap{position:relative}
+    .toggle-eye-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;font-size:13px;line-height:1;color:var(--muted);border:1px solid var(--border);background:var(--input);cursor:pointer}
+    .logo-box{height:84px;border:1px dashed var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--input);overflow:hidden}
+    .logo-box img{max-height:84px;max-width:100%;display:none}
+    .alert{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;font-size:14px}
+    .alert.ok{background:color-mix(in oklab,#0d2b1b 80%,var(--accent) 20%);border:1px solid #1b5e33;color:#b1f3c8}
+    .alert.err{background:color-mix(in oklab,#2b0d0d 80%,var(--danger) 20%);border:1px solid #5e1b1b;color:#f3b1b1}
+    .theme-switch{display:inline-flex;gap:8px;align-items:center}
+    .theme-toggle{border:1px solid var(--border);background:var(--input);color:var(--text);padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px}
   </style>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-storage-compat.js"></script>
 </head>
 <body>
   <div class="container">
@@ -156,9 +90,7 @@
           <div class="field password-wrap">
             <label for="password">Password</label>
             <input id="password" name="password" type="password" placeholder="••••••••" required />
-            <button id="toggleEye" class="toggle-eye-btn" type="button" aria-label="Show password">
-              <span id="eyeIcon">👁️</span>
-            </button>
+            <button id="toggleEye" class="toggle-eye-btn" type="button" aria-label="Show password"><span id="eyeIcon">👁️</span></button>
           </div>
           <div class="row" style="align-items:center;">
             <button class="btn primary" type="submit">Sign in</button>
@@ -182,7 +114,7 @@
                 <img id="logoImg" alt="Logo preview" />
                 <span id="logoPlaceholder" class="muted">No logo uploaded</span>
               </div>
-              <input id="logoFile" type="file" accept="image/*" onchange="previewLogo()" />
+              <input id="logoFile" type="file" accept="image/*" />
             </div>
 
             <div class="field">
@@ -195,7 +127,6 @@
               <input id="tagline" type="text" placeholder="Professional Proposal Generator" />
             </div>
 
-            <!-- Improved color pickers -->
             <div class="field">
               <label for="primaryColor">Primary color</label>
               <div class="color-field">
@@ -214,7 +145,7 @@
               </div>
             </div>
 
-            <button class="btn success" onclick="saveBranding()">Save Branding</button>
+            <button id="saveBrandingBtn" class="btn success">Save Branding</button>
             <div id="brandingSuccess" class="alert ok">Branding saved.</div>
             <div id="brandingError" class="alert err">Could not save branding.</div>
           </div>
@@ -230,7 +161,7 @@
               <label for="customDomain">Custom domain (optional)</label>
               <input id="customDomain" type="text" placeholder="agency.example.com" />
             </div>
-            <button class="btn success" onclick="saveSettings()">Save Settings</button>
+            <button id="saveSettingsBtn" class="btn success">Save Settings</button>
             <div id="settingsSuccess" class="alert ok">Settings saved.</div>
             <div id="settingsError" class="alert err">Could not save settings.</div>
 
@@ -247,35 +178,7 @@
     </div>
   </div>
 
-  <!-- Firebase SDKs: v10 compat (CSP‑friendly) -->
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-storage-compat.js"></script>
-
-  <!-- Initialize Firebase (single init) -->
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyDadaImEVf-rdcEPlza_UR3Kp--52wQbhI",
-    authDomain: "scopebuilderai.firebaseapp.com",
-    projectId: "scopebuilderai",
-    storageBucket: "scopebuilderai.firebasestorage.app",
-    messagingSenderId: "471021428025",
-    appId: "1:471021428025:web:8246535fe30b2854701ce8"
-  };
-  if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-</script>
-
-    };
-    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-    // Avoid WebChannel + CSP issues
-    try { db.settings({ experimentalForceLongPolling: true, merge: true }); } catch(e){}
-  </script>
-
-  <!-- Admin logic -->
+  <!-- Firebase init + Admin logic -->
   <script>
     // THEME
     const themeToggle = document.getElementById('themeToggle');
@@ -286,10 +189,26 @@
       applyTheme(next);
     });
 
-    // UI helpers
-    function flash(id) { const el = document.getElementById(id); if (!el) return; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 1800); }
-    function setVal(id, val) { const el = document.getElementById(id); if (el != null) el.value = val; }
-    function updatePreview() {
+    // Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDadaImEVf-rdcEPlza_UR3Kp--52wQbhI",
+      authDomain: "scopebuilderai.firebaseapp.com",
+      projectId: "scopebuilderai",
+      // Set this to your exact bucket from Firebase Console (could be *.firebasestorage.app on newer projects)
+      storageBucket: "scopebuilderai.firebasestorage.app",
+      messagingSenderId: "471021428025",
+      appId: "1:471021428025:web:8246535fe30b2854701ce8"
+    };
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    try { db.settings({ experimentalForceLongPolling: true, merge: true }); } catch(e){}
+
+    // Helpers
+    function flash(id){ const el=document.getElementById(id); if(!el) return; el.style.display='block'; setTimeout(()=>el.style.display='none',1800); }
+    function setVal(id,val){ const el=document.getElementById(id); if(el) el.value=val; }
+    function updatePreview(){
       document.getElementById('previewTitle').textContent = document.getElementById('siteTitle').value || 'ScopeBuilderAI';
       document.getElementById('previewTagline').textContent = document.getElementById('tagline').value || 'Professional Proposal Generator';
       const pc = document.getElementById('primaryColor').value || '#1e3a8a';
@@ -297,174 +216,178 @@
     }
     function validateHex(v){ return /^#([0-9a-f]{6})$/i.test(v); }
     function syncColorControls(which){
-      const picker = document.getElementById(which + 'Color');
-      const hex = document.getElementById(which + 'Hex');
-      const chip = document.getElementById('chip' + (which === 'primary' ? 'Primary' : 'Secondary'));
-      const toHex = (val) => val.toUpperCase();
-      picker.addEventListener('input', () => { hex.value = toHex(picker.value); chip.style.background = picker.value; updatePreview(); });
-      hex.addEventListener('input', () => {
+      const picker = document.getElementById(which+'Color');
+      const hex = document.getElementById(which+'Hex');
+      const chip = document.getElementById('chip'+(which==='primary'?'Primary':'Secondary'));
+      const toHex = (val)=>val.toUpperCase();
+      picker.addEventListener('input', ()=>{ hex.value=toHex(picker.value); chip.style.background=picker.value; updatePreview(); });
+      hex.addEventListener('input', ()=>{
         const v = hex.value.startsWith('#') ? hex.value : '#'+hex.value;
-        if (validateHex(v)) { picker.value = v; chip.style.background = v; updatePreview(); }
+        if (validateHex(v)) { picker.value=v; chip.style.background=v; updatePreview(); }
       });
-      // init
-      hex.value = toHex(picker.value);
-      chip.style.background = picker.value;
+      hex.value=toHex(picker.value); chip.style.background=picker.value;
     }
+    syncColorControls('primary');
+    syncColorControls('secondary');
 
     // Logo preview
-    function previewLogo() {
-      const file = document.getElementById('logoFile').files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        const img = document.getElementById('logoImg');
-        img.src = e.target.result;
-        img.style.display = 'block';
-        document.getElementById('logoPlaceholder').style.display = 'none';
+    function previewLogo(){
+      const file=document.getElementById('logoFile').files[0];
+      if(!file) return;
+      const reader=new FileReader();
+      reader.onload=e=>{
+        const img=document.getElementById('logoImg');
+        img.src=e.target.result; img.style.display='block';
+        document.getElementById('logoPlaceholder').style.display='none';
       };
       reader.readAsDataURL(file);
     }
-    window.previewLogo = previewLogo;
+    document.getElementById('logoFile').addEventListener('change', previewLogo);
 
-    // Password toggle (compact & visible)
-    const passEl = document.getElementById('password');
-    const eyeBtn = document.getElementById('toggleEye');
-    const eyeIcon = document.getElementById('eyeIcon');
-    eyeBtn.addEventListener('click', () => {
-      const isPwd = passEl.type === 'password';
-      passEl.type = isPwd ? 'text' : 'password';
-      eyeIcon.textContent = isPwd ? '🙈' : '👁️';
+    // Password toggle
+    const passEl=document.getElementById('password');
+    const eyeBtn=document.getElementById('toggleEye');
+    const eyeIcon=document.getElementById('eyeIcon');
+    eyeBtn.addEventListener('click', ()=>{
+      const isPwd=passEl.type==='password';
+      passEl.type=isPwd?'text':'password';
+      eyeIcon.textContent=isPwd?'🙈':'👁️';
       eyeBtn.setAttribute('aria-label', isPwd ? 'Hide password' : 'Show password');
     });
 
     // Forgot password
-    const forgotBtn = document.getElementById('forgotBtn');
-    const resetInfo = document.getElementById('resetInfo');
-    const authError = document.getElementById('authError');
-    forgotBtn.addEventListener('click', async () => {
-      const email = document.getElementById('email').value.trim();
-      resetInfo.style.display = 'none'; authError.style.display = 'none';
-      if (!email) { authError.textContent = 'Enter your email, then click “Forgot password?”.'; authError.style.display = 'block'; return; }
-      try { await auth.sendPasswordResetEmail(email); resetInfo.textContent = 'Password reset email sent.'; resetInfo.style.display = 'block'; }
-      catch (e) { authError.textContent = e.message; authError.style.display = 'block'; }
+    const forgotBtn=document.getElementById('forgotBtn');
+    const resetInfo=document.getElementById('resetInfo');
+    const authError=document.getElementById('authError');
+    forgotBtn.addEventListener('click', async ()=>{
+      const email=document.getElementById('email').value.trim();
+      resetInfo.style.display='none'; authError.style.display='none';
+      if(!email){ authError.textContent='Enter your email, then click “Forgot password?”.'; authError.style.display='block'; return; }
+      try { await auth.sendPasswordResetEmail(email); resetInfo.textContent='Password reset email sent.'; resetInfo.style.display='block'; }
+      catch(e){ authError.textContent=e.message; authError.style.display='block'; }
     });
 
     // Auth state
-    const authSection = document.getElementById('authSection');
-    const adminDashboard = document.getElementById('adminDashboard');
-    const logoutBtn = document.getElementById('logoutBtn');
+    const authSection=document.getElementById('authSection');
+    const adminDashboard=document.getElementById('adminDashboard');
+    const logoutBtn=document.getElementById('logoutBtn');
+    let currentUser=null; let currentAgencyId=null;
 
-    let currentUser = null;
-    let currentAgencyId = null;
-
-    auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        currentUser = user;
-        currentAgencyId = user.uid;
-        authSection.style.display = 'none';
-        adminDashboard.style.display = 'block';
-        logoutBtn.style.display = 'inline-block';
+    auth.onAuthStateChanged(async (user)=>{
+      if(user){
+        currentUser=user; currentAgencyId=user.uid;
+        authSection.style.display='none';
+        adminDashboard.style.display='block';
+        logoutBtn.style.display='inline-block';
         await loadAgencyData();
       } else {
-        currentUser = null; currentAgencyId = null;
-        authSection.style.display = 'block';
-        adminDashboard.style.display = 'none';
-        logoutBtn.style.display = 'none';
+        currentUser=null; currentAgencyId=null;
+        authSection.style.display='block';
+        adminDashboard.style.display='none';
+        logoutBtn.style.display='none';
       }
     });
 
-    // Login
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    document.getElementById('loginForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
-      authError.style.display = 'none'; resetInfo.style.display = 'none';
-      const email = document.getElementById('email').value.trim();
-      const password = passEl.value.trim();
-      try { await auth.signInWithEmailAndPassword(email, password); authError.textContent = ''; }
-      catch (err) { authError.textContent = err.message; authError.style.display = 'block'; }
+      authError.style.display='none'; resetInfo.style.display='none';
+      const email=document.getElementById('email').value.trim();
+      const password=passEl.value.trim();
+      try { await auth.signInWithEmailAndPassword(email, password); }
+      catch(err){ authError.textContent=err.message; authError.style.display='block'; }
     });
 
-    // Logout
-    logoutBtn.addEventListener('click', async () => { await auth.signOut(); });
+    logoutBtn.addEventListener('click', async ()=>{ await auth.signOut(); });
 
-    // Load agency doc
-    async function loadAgencyData() {
-      try {
-        const ref = db.collection('agencies').doc(currentAgencyId);
-        const snap = await ref.get();
-        if (snap.exists) {
-          const d = snap.data();
+    async function loadAgencyData(){
+      try{
+        const ref=db.collection('agencies').doc(currentAgencyId);
+        const snap=await ref.get();
+        if(snap.exists){
+          const d=snap.data();
           setVal('siteTitle', d.siteTitle || 'ScopeBuilderAI');
           setVal('tagline', d.tagline || 'Professional Proposal Generator');
           setVal('agencyName', d.agencyName || '');
           setVal('customDomain', d.customDomain || '');
-          const pc = (d.primaryColor || '#1e3a8a').toLowerCase();
-          const sc = (d.secondaryColor || '#3a8bff').toLowerCase();
-          document.getElementById('primaryColor').value = pc;
-          document.getElementById('secondaryColor').value = sc;
-          document.getElementById('primaryHex').value = pc.toUpperCase();
-          document.getElementById('secondaryHex').value = sc.toUpperCase();
-          document.getElementById('chipPrimary').style.background = pc;
-          document.getElementById('chipSecondary').style.background = sc;
-          if (d.logoUrl) {
-            const img = document.getElementById('logoImg');
-            img.src = d.logoUrl; img.style.display = 'block';
-            document.getElementById('logoPlaceholder').style.display = 'none';
+          const pc=(d.primaryColor || '#1e3a8a').toLowerCase();
+          const sc=(d.secondaryColor || '#3a8bff').toLowerCase();
+          document.getElementById('primaryColor').value=pc;
+          document.getElementById('secondaryColor').value=sc;
+          document.getElementById('primaryHex').value=pc.toUpperCase();
+          document.getElementById('secondaryHex').value=sc.toUpperCase();
+          document.getElementById('chipPrimary').style.background=pc;
+          document.getElementById('chipSecondary').style.background=sc;
+          if(d.logoUrl){
+            const img=document.getElementById('logoImg');
+            img.src=d.logoUrl; img.style.display='block';
+            document.getElementById('logoPlaceholder').style.display='none';
           }
           updatePreview();
         } else {
-          // ensure doc exists for future merges
-          await ref.set({ siteTitle: 'ScopeBuilderAI', tagline: 'Professional Proposal Generator' }, { merge: true });
+          await ref.set({ siteTitle:'ScopeBuilderAI', tagline:'Professional Proposal Generator' }, { merge:true });
         }
-      } catch (e) {
-        console.error('loadAgencyData failed', e);
-      }
+      }catch(e){ console.error('loadAgencyData failed', e); }
     }
 
-    // Save branding
-    async function saveBranding() {
-      try {
-        let logoUrl = '';
-        const file = document.getElementById('logoFile').files[0];
-        if (file) {
-          const ref = storage.ref(`logos/${currentAgencyId}/${file.name}`);
+    // Require auth, upload with SDK, then save Firestore
+    async function saveBranding(){
+      const btn=document.getElementById('saveBrandingBtn');
+      const ok=document.getElementById('brandingSuccess');
+      const err=document.getElementById('brandingError');
+      try{
+        const user = firebase.auth().currentUser;
+        if(!user){ err.textContent='Sign in first.'; err.style.display='block'; return; }
+        btn.disabled=true; btn.textContent='Saving...';
+        let logoUrl='';
+        const file=document.getElementById('logoFile').files[0];
+        if(file){
+          const ref=storage.ref(`logos/${user.uid}/${file.name}`);
           await ref.put(file);
-          logoUrl = await ref.getDownloadURL();
+          logoUrl=await ref.getDownloadURL();
         }
-        const payload = {
+        const payload={
           siteTitle: document.getElementById('siteTitle').value.trim(),
           tagline: document.getElementById('tagline').value.trim(),
           primaryColor: document.getElementById('primaryColor').value,
           secondaryColor: document.getElementById('secondaryColor').value
         };
-        if (logoUrl) payload.logoUrl = logoUrl;
-        await db.collection('agencies').doc(currentAgencyId).set(payload, { merge: true });
-        updatePreview();
-        flash('brandingSuccess');
-      } catch (e) {
+        if(logoUrl) payload.logoUrl=logoUrl;
+        await db.collection('agencies').doc(user.uid).set(payload, { merge:true });
+        ok.textContent='Branding saved successfully.'; ok.style.display='block'; err.style.display='none';
+        setTimeout(()=> ok.style.display='none', 1800);
+      }catch(e){
         console.error('saveBranding failed', e);
-        flash('brandingError');
+        err.textContent = e.message || 'Could not save branding.'; err.style.display='block';
+      }finally{
+        btn.disabled=false; btn.textContent='Save Branding';
       }
     }
-    window.saveBranding = saveBranding;
+    document.getElementById('saveBrandingBtn').addEventListener('click', saveBranding);
 
-    // Save settings
-    async function saveSettings() {
-      try {
-        await db.collection('agencies').doc(currentAgencyId).set({
+    async function saveSettings(){
+      const btn=document.getElementById('saveSettingsBtn');
+      const ok=document.getElementById('settingsSuccess');
+      const err=document.getElementById('settingsError');
+      try{
+        const user = firebase.auth().currentUser;
+        if(!user){ err.textContent='Sign in first.'; err.style.display='block'; return; }
+        btn.disabled=true; btn.textContent='Saving...';
+        await db.collection('agencies').doc(user.uid).set({
           agencyName: document.getElementById('agencyName').value.trim(),
           customDomain: document.getElementById('customDomain').value.trim()
-        }, { merge: true });
-        flash('settingsSuccess');
-      } catch (e) {
+        }, { merge:true });
+        ok.textContent='Settings saved successfully.'; ok.style.display='block'; err.style.display='none';
+        setTimeout(()=> ok.style.display='none', 1800);
+      }catch(e){
         console.error('saveSettings failed', e);
-        flash('settingsError');
+        err.textContent=e.message || 'Could not save settings.'; err.style.display='block';
+      }finally{
+        btn.disabled=false; btn.textContent='Save Settings';
       }
     }
-    window.saveSettings = saveSettings;
+    document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
 
-    // Initialize enhanced color controls
-    syncColorControls('primary');
-    syncColorControls('secondary');
+    // Live preview color updates
     document.getElementById('primaryColor').addEventListener('change', updatePreview);
     document.getElementById('secondaryColor').addEventListener('change', updatePreview);
   </script>
