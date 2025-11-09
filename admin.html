@@ -7,22 +7,22 @@
   <link rel="icon" href="favicon.ico" />
 
   <style>
-    :root { --bg:#0b1220; --card:#121a2a; --muted:#7b8aa5; --text:#e6eeff; --primary:#3a8bff; --accent:#22c55e; --danger:#ef4444; --border:#1f2a44; --input:#0b1322; --shadow:rgba(0,0,0,0.4) }
-    html[data-theme="light"] { --bg:#f5f7fb; --card:#fff; --muted:#5a6b87; --text:#0f172a; --primary:#1e3a8a; --accent:#16a34a; --danger:#dc2626; --border:#e5e7eb; --input:#f8fafc; --shadow:rgba(0,0,0,0.06) }
+    :root { --bg:#0b1220; --card:#121a2a; --muted:#7b8aa5; --text:#e6eeff; --border:#1f2a44; --input:#0b1322 }
+    html[data-theme="light"] { --bg:#f5f7fb; --card:#fff; --muted:#5a6b87; --text:#0f172a; --border:#e5e7eb; --input:#f8fafc }
     html,body{height:100%}
     body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
     .container{max-width:980px;margin:40px auto;padding:0 16px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 30px var(--shadow);padding:24px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
     @media (max-width:900px){.grid-2{grid-template-columns:1fr}}
     h1,h3{margin:0 0 12px}
     .muted{color:var(--muted)}
     .row{display:flex;gap:12px}
     .row.center{align-items:center;justify-content:space-between}
-    .btn{appearance:none;border:1px solid var(--border);background:linear-gradient(180deg,#2f66c7 0%,#244e98 100%);color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
+    .btn{appearance:none;border:1px solid var(--border);background:#244e98;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
     .btn.link{background:transparent;border-color:transparent;color:var(--muted);text-decoration:underline;padding:8px 6px}
-    .btn.danger{background:linear-gradient(180deg,#ef4444 0%,#b72d2d 100%)}
-    .btn.success{background:linear-gradient(180deg,#23b15a 0%,#1d8f4b 100%)}
+    .btn.danger{background:#b72d2d}
+    .btn.success{background:#1d8f4b}
     .btn[disabled]{opacity:.6;cursor:progress}
     .pill{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;color:#c9d7ff;background:#1d2a44;border:1px solid var(--border)}
     .divider{height:1px;background:var(--border);margin:16px 0}
@@ -138,7 +138,7 @@
     </div>
   </div>
 
-  <!-- Init + Admin logic (MUST be after SDKs) -->
+  <!-- Firebase init + Admin logic (MUST be after SDKs) -->
   <script>
     // Theme
     const themeToggle = document.getElementById('themeToggle');
@@ -149,7 +149,7 @@
       applyTheme(next);
     });
 
-    // Firebase
+    // Firebase (EXACT bucket from console)
     const firebaseConfig = {
       apiKey: "AIzaSyDadaImEVf-rdcEPlza_UR3Kp--52wQbhI",
       authDomain: "scopebuilderai.firebaseapp.com",
@@ -159,10 +159,11 @@
       appId: "1:471021428025:web:8246535fe30b2854701ce8"
     };
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-    try { db.settings({ experimentalForceLongPolling: true, merge: true }); } catch(e){}
+    // Expose on window in case later blocks run in different scope
+    window.auth = firebase.auth();
+    window.db = firebase.firestore();
+    window.storage = firebase.storage();
+    try { window.db.settings({ experimentalForceLongPolling: true, merge: true }); } catch(e){}
 
     // Helpers
     const authSection=document.getElementById('authSection');
@@ -196,18 +197,18 @@
       const email=document.getElementById('email').value.trim();
       resetInfo.style.display='none'; authError.style.display='none';
       if(!email){ authError.textContent='Enter your email first.'; authError.style.display='block'; return; }
-      try { await auth.sendPasswordResetEmail(email); flash('resetInfo','Password reset email sent.',true); }
+      try { await window.auth.sendPasswordResetEmail(email); flash('resetInfo','Password reset email sent.',true); }
       catch(e){ authError.textContent=e.message; authError.style.display='block'; }
     });
 
     // Auth flow
-    auth.onAuthStateChanged(async (user)=>{
+    window.auth.onAuthStateChanged(async (user)=>{
       if(user){
         authSection.style.display='none';
         adminDashboard.style.display='block';
         logoutBtn.style.display='inline-block';
         try{
-          const ref=db.collection('agencies').doc(user.uid);
+          const ref=window.db.collection('agencies').doc(user.uid);
           const snap=await ref.get();
           if(snap.exists){
             const d=snap.data();
@@ -234,11 +235,11 @@
       authError.style.display='none'; resetInfo.style.display='none';
       const email=document.getElementById('email').value.trim();
       const password=passEl.value.trim();
-      try{ await auth.signInWithEmailAndPassword(email,password); }
+      try{ await window.auth.signInWithEmailAndPassword(email,password); }
       catch(e){ authError.textContent=e.message; authError.style.display='block'; }
     });
 
-    logoutBtn.addEventListener('click', async ()=>{ await auth.signOut(); });
+    logoutBtn.addEventListener('click', async ()=>{ await window.auth.signOut(); });
 
     // Logo preview
     document.getElementById('logoFile').addEventListener('change', ()=>{
@@ -254,8 +255,8 @@
     });
 
     // Save Branding
-    document.getElementById('saveBrandingBtn').addEventListener('click', async ()=>{
-      const user=auth.currentUser;
+    document.getElementById('saveBrandingBtn').addEventListener('click', async (e)=>{
+      const user=window.auth.currentUser;
       const okEl='brandingSuccess', errEl='brandingError';
       if(!user){ flash(errEl,'Sign in first.',false); return; }
       const btn=e.target||document.getElementById('saveBrandingBtn'); btn.disabled=true; btn.textContent='Saving...';
@@ -263,11 +264,11 @@
         let logoUrl='';
         const file=document.getElementById('logoFile').files[0];
         if(file){
-          const ref=storage.ref(`logos/${user.uid}/${file.name}`);
+          const ref=window.storage.ref(`logos/${user.uid}/${file.name}`);
           await ref.put(file);
           logoUrl=await ref.getDownloadURL();
         }
-        await db.collection('agencies').doc(user.uid).set({
+        await window.db.collection('agencies').doc(user.uid).set({
           siteTitle: document.getElementById('siteTitle').value.trim(),
           tagline: document.getElementById('tagline').value.trim(),
           ...(logoUrl?{logoUrl}:{}),
@@ -278,13 +279,13 @@
     });
 
     // Save Settings
-    document.getElementById('saveSettingsBtn').addEventListener('click', async ()=>{
-      const user=auth.currentUser;
+    document.getElementById('saveSettingsBtn').addEventListener('click', async (e)=>{
+      const user=window.auth.currentUser;
       const okEl='settingsSuccess', errEl='settingsError';
       if(!user){ flash(errEl,'Sign in first.',false); return; }
       const btn=e.target||document.getElementById('saveSettingsBtn'); btn.disabled=true; btn.textContent='Saving...';
       try{
-        await db.collection('agencies').doc(user.uid).set({
+        await window.db.collection('agencies').doc(user.uid).set({
           agencyName: document.getElementById('agencyName').value.trim(),
           customDomain: document.getElementById('customDomain').value.trim()
         }, { merge:true });
