@@ -60,6 +60,24 @@
   <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-storage-compat.js"></script>
+  <script>
+  // Replace with your exact bucket from Firebase Console
+  const firebaseConfig = {
+    apiKey: "AIzaSyDadaImEVf-rdcEPlza_UR3Kp--52wQbhI",
+    authDomain: "scopebuilderai.firebaseapp.com",
+    projectId: "scopebuilderai",
+    storageBucket: "YOUR_EXACT_BUCKET_HERE",
+    messagingSenderId: "471021428025",
+    appId: "1:471021428025:web:8246535fe30b2854701ce8"
+  };
+
+  if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+  try { db.settings({ experimentalForceLongPolling: true, merge: true }); } catch (e) {}
+</script>
+
 </head>
 <body>
   <div class="container">
