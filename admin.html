@@ -2,95 +2,825 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>Admin Panel – ScopeBuilder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel</title>
+
+  <!-- Icons (for eye toggle, etc.) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SVLp5cV2pVd6CqC4aFqQyF4C1HcI9xN9RjwCqG9uA3oG4YpNqJ9tD4CrW5A8VtZLw4q1c8dPZfS2MvW8V9P4Yg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
   <style>
+    :root {
+      --bg: #0b1020;
+      --card-bg: #12172a;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.08);
+      --accent-hover: #4338ca;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --danger: #ef4444;
+      --danger-soft: rgba(239, 68, 68, 0.12);
+      --border-subtle: rgba(148, 163, 184, 0.35);
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.52);
+      --radius-lg: 18px;
+      --radius-full: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f9;
       margin: 0;
-      padding: 20px;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 40%, #000 100%);
+      color: var(--text-main);
       display: flex;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
+      justify-content: center;
+      padding: 24px;
     }
-    .container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+    .shell {
       width: 100%;
-      max-width: 400px;
+      max-width: 960px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: 28px;
+      align-items: stretch;
     }
-    input, button {
+
+    @media (max-width: 768px) {
+      .shell {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #111827 0, #020617 55%);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: var(--shadow-soft);
+      padding: 28px 26px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(
+        circle at top right,
+        rgba(79, 70, 229, 0.24),
+        transparent 55%
+      );
+      opacity: 0.75;
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-muted);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18);
+    }
+
+    .title-row {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-pill {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: radial-gradient(circle at 30% 0%, #818cf8, #4f46e5 45%, #0f172a);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 30px rgba(79, 70, 229, 0.45);
+      overflow: hidden;
+    }
+
+    .logo-pill img {
       width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
-    button {
-      background: #4CAF50;
-      color: white;
+
+    .logo-initial {
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .title-text h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 0.03em;
+    }
+
+    .title-text p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .meta-row {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.8);
+    }
+
+    .meta-chip i {
+      font-size: 11px;
+      color: var(--accent);
+    }
+
+    .divider {
+      margin: 18px 0 16px;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(148, 163, 184, 0.8),
+        transparent
+      );
+    }
+
+    .card-body p {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      color: var(--text-muted);
+    }
+
+    .pill span {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .login-card {
+      background: radial-gradient(circle at top, #111827 0, #020617 55%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 26px 24px 24px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(
+        circle at top left,
+        rgba(79, 70, 229, 0.28),
+        transparent 60%
+      );
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .login-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .login-header-main h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .login-header-main p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .env-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: #22c55e;
+      background: rgba(22, 163, 74, 0.04);
+      border: 1px solid rgba(34, 197, 94, 0.24);
+    }
+
+    .field-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-align: left;
+    }
+
+    .input-shell {
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 11px;
+      border-radius: 9px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease,
+        background 0.2s ease;
+    }
+
+    input::placeholder {
+      color: rgba(148, 163, 184, 0.8);
+      font-size: 12px;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.7);
+      background: rgba(15, 23, 42, 0.96);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(148, 163, 184, 0.95);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .primary-btn {
+      width: 100%;
+      margin-top: 4px;
+      border-radius: 9px;
+      border: none;
+      padding: 10px 0;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #e5e7eb;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+        background 0.2s ease;
+      box-shadow: 0 12px 30px rgba(79, 70, 229, 0.45);
+    }
+
+    .primary-btn:hover {
+      background: linear-gradient(135deg, #4338ca, #4f46e5);
+      transform: translateY(-0.5px);
+      box-shadow: 0 16px 36px rgba(79, 70, 229, 0.6);
+    }
+
+    .primary-btn:active {
+      transform: translateY(0.5px);
+      box-shadow: 0 8px 18px rgba(79, 70, 229, 0.4);
+    }
+
+    .primary-btn span {
+      font-size: 13px;
+    }
+
+    .primary-btn i {
+      font-size: 13px;
+    }
+
+    .helper-row {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .helper-row a {
+      color: #a5b4fc;
+      text-decoration: none;
       cursor: pointer;
     }
-    button:hover {
-      background: #45a049;
+
+    .helper-row a:hover {
+      text-decoration: underline;
     }
-    .hidden {
-      display: none;
+
+    .status {
+      margin-top: 10px;
+      font-size: 12px;
+      min-height: 16px;
+      text-align: left;
+    }
+
+    .status.error {
+      color: #fecaca;
+      background: var(--danger-soft);
+      padding: 7px 9px;
+      border-radius: 9px;
+      border: 1px solid rgba(239, 68, 68, 0.55);
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .status.error i {
+      margin-top: 1px;
+    }
+
+    .status.success {
+      color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.14);
+      padding: 7px 9px;
+      border-radius: 9px;
+      border: 1px solid rgba(34, 197, 94, 0.55);
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .admin-panel {
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .admin-panel h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .admin-panel p {
+      margin: 0 0 12px;
+      color: var(--text-muted);
+    }
+
+    .admin-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .admin-meta span {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: var(--text-muted);
+    }
+
+    .outline-btn {
+      border-radius: 9px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: transparent;
+      color: var(--text-main);
+      padding: 8px 0;
+      width: 100%;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.14s ease, border-color 0.14s ease,
+        transform 0.1s ease;
+    }
+
+    .outline-btn:hover {
+      background: rgba(15, 23, 42, 0.9);
+      border-color: rgba(148, 163, 184, 1);
+      transform: translateY(-0.5px);
+    }
+
+    .outline-btn i {
+      font-size: 13px;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="loginForm">
-    <h2>Admin Login</h2>
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="signIn()">Sign In</button>
-    <p id="error"></p>
+  <div class="shell">
+    <!-- Left side: Product/brand context -->
+    <section class="card">
+      <div class="card-inner">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          ADMIN ACCESS · CLIENT WORKSPACES
+        </div>
+
+        <div class="title-row">
+          <div class="logo-pill">
+            <!-- Replace src with your actual logo if you want -->
+            <!-- <img src="your-logo.png" alt="Logo" /> -->
+            <span class="logo-initial">SB</span>
+          </div>
+          <div class="title-text">
+            <h1>ScopeBuilder Admin</h1>
+            <p>Secure dashboard for managing client proposals and workspaces.</p>
+          </div>
+        </div>
+
+        <div class="meta-row">
+          <div class="meta-chip">
+            <i class="fa-solid fa-shield-check"></i>
+            Email-authenticated access
+          </div>
+          <div class="meta-chip">
+            <i class="fa-solid fa-key"></i>
+            Supabase Auth · RLS
+          </div>
+          <div class="meta-chip">
+            <i class="fa-solid fa-building"></i>
+            White-label ready
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="card-body">
+          <p>
+            Only authorized, paying clients can access this admin interface.
+            Authentication is powered by Supabase with Row Level Security, so
+            every workspace stays isolated and secure.
+          </p>
+          <p>
+            Use your registered email and password. If your subscription lapses,
+            access will be paused until payment is renewed.
+          </p>
+          <div class="pill-row">
+            <span class="pill"><span>01</span> · Email & password login</span>
+            <span class="pill"><span>02</span> · Subscription-aware access</span>
+            <span class="pill"><span>03</span> · Multi‑tenant friendly</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right side: Auth / admin logic -->
+    <section class="login-card">
+      <div class="login-inner">
+        <!-- Login panel -->
+        <div id="loginForm">
+          <div class="login-header">
+            <div class="login-header-main">
+              <h2>Sign in to admin</h2>
+              <p>Use the credentials shared with your onboarding email.</p>
+            </div>
+            <div class="env-pill">
+              <i class="fa-solid fa-circle-dot"></i>&nbsp; Client workspace
+            </div>
+          </div>
+
+          <div class="input-shell">
+            <div class="field-label">Email</div>
+            <div class="input-wrap">
+              <input
+                type="email"
+                id="email"
+                placeholder="name@agency.com"
+                autocomplete="email"
+              />
+            </div>
+          </div>
+
+          <div class="input-shell">
+            <div class="field-label">Password</div>
+            <div class="input-wrap">
+              <input
+                type="password"
+                id="password"
+                placeholder="••••••••"
+                autocomplete="current-password"
+              />
+              <i
+                class="fa-regular fa-eye toggle-password"
+                id="togglePassword"
+                aria-label="Toggle password visibility"
+              ></i>
+            </div>
+          </div>
+
+          <button class="primary-btn" id="loginButton" onclick="signIn()">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>Sign in</span>
+          </button>
+
+          <div class="helper-row">
+            <span>Access restricted to active subscriptions.</span>
+            <!-- Hook up later if you add reset flow -->
+            <a onclick="showInfoToast()">Need help?</a>
+          </div>
+
+          <div id="status" class="status"></div>
+        </div>
+
+        <!-- Admin panel (shown after successful + paid) -->
+        <div id="adminPanel" class="admin-panel" style="display:none;">
+          <h3>Admin workspace</h3>
+          <p>
+            You are signed in with an active subscription. Proceed with managing
+            your proposals, clients, and settings.
+          </p>
+
+          <div class="admin-meta">
+            <span><i class="fa-solid fa-user-check"></i>&nbsp; Authenticated</span>
+            <span><i class="fa-solid fa-badge-check"></i>&nbsp; Subscription active</span>
+            <span><i class="fa-solid fa-database"></i>&nbsp; Supabase backend</span>
+          </div>
+
+          <!-- Replace this section later with your real admin UI -->
+          <p style="margin-bottom: 14px;">
+            This is a placeholder surface. Embed your existing admin dashboard
+            components here once auth is fully wired and tested.
+          </p>
+
+          <button class="outline-btn" onclick="signOut()">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Sign out</span>
+          </button>
+
+          <div id="statusAdmin" class="status" style="margin-top:10px;"></div>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <div class="container hidden" id="adminPanel">
-    <h2>Welcome, Admin</h2>
-    <p>You are logged in!</p>
-    <button onclick="signOut()">Sign Out</button>
-  </div>
-
+  <!-- Supabase JS (CDN) -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script>
-    // Replace with your Supabase project URL and Anon Key
-    const supabaseUrl = 'https://csvvtobiipdcfkmprpht.supabase.co';
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzdnZ0b2JpaXBkY2ZrbXBycGh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1MjUxODksImV4cCI6MjA3ODEwMTE4OX0.BIoRkbgyPOfnT7AFwoAV6sqhM6Ne-qUCP-gLCs1-Ijs';
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const { createClient } = supabase;
 
-    // Check for active session on page load
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        document.getElementById('loginForm').classList.add('hidden');
-        document.getElementById('adminPanel').classList.remove('hidden');
-      }
-    });
+    const supabaseUrl = "https://csvvtobiipdcfkmprpht.supabase.co";
+    const supabaseAnonKey =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzdnZ0b2JpaXBkY2ZrbXBycGh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1MjUxODksImV4cCI6MjA3ODEwMTE4OX0.BIoRkbgyPOfnT7AFwoAV6sqhM6Ne-qUCP-gLCs1-Ijs";
 
-    // Sign In function
-    async function signIn() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        document.getElementById('error').textContent = error.message;
+    const sb = createClient(supabaseUrl, supabaseAnonKey);
+
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+    const statusEl = document.getElementById("status");
+    const statusAdminEl = document.getElementById("statusAdmin");
+    const loginFormEl = document.getElementById("loginForm");
+    const adminPanelEl = document.getElementById("adminPanel");
+    const loginButton = document.getElementById("loginButton");
+
+    function setStatus(message, type = "") {
+      statusEl.className = "status";
+      statusEl.innerHTML = "";
+
+      if (!message) return;
+
+      if (type === "error") {
+        statusEl.classList.add("error");
+        statusEl.innerHTML =
+          '<i class="fa-solid fa-circle-exclamation"></i><span>' +
+          message +
+          "</span>";
+      } else if (type === "success") {
+        statusEl.classList.add("success");
+        statusEl.innerHTML =
+          '<i class="fa-solid fa-circle-check"></i><span>' +
+          message +
+          "</span>";
       } else {
-        document.getElementById('loginForm').classList.add('hidden');
-        document.getElementById('adminPanel').classList.remove('hidden');
+        statusEl.textContent = message;
       }
     }
 
-    // Sign Out function
+    function setAdminStatus(message, type = "") {
+      statusAdminEl.className = "status";
+      statusAdminEl.innerHTML = "";
+
+      if (!message) return;
+
+      if (type === "success") {
+        statusAdminEl.classList.add("success");
+        statusAdminEl.innerHTML =
+          '<i class="fa-solid fa-circle-check"></i><span>' +
+          message +
+          "</span>";
+      } else {
+        statusAdminEl.textContent = message;
+      }
+    }
+
+    togglePassword.addEventListener("click", () => {
+      const isPassword = passwordInput.getAttribute("type") === "password";
+      passwordInput.setAttribute("type", isPassword ? "text" : "password");
+      togglePassword.classList.toggle("fa-eye");
+      togglePassword.classList.toggle("fa-eye-slash");
+    });
+
+    function showInfoToast() {
+      setStatus(
+        "If you are a paying client and cannot log in, please contact support for assistance.",
+        "error"
+      );
+    }
+
+    async function checkPaidAndShow(session) {
+      try {
+        const userId = session?.user?.id;
+        if (!userId) {
+          setStatus("Unable to resolve user session. Please sign in again.", "error");
+          loginFormEl.style.display = "block";
+          adminPanelEl.style.display = "none";
+          return;
+        }
+
+        const { data, error } = await sb
+          .from("users")
+          .select("is_paid")
+          .eq("id", userId)
+          .maybeSingle();
+
+        if (error) {
+          console.error("is_paid check error:", error);
+          setStatus(
+            "Unable to verify subscription status at the moment. Please try again shortly.",
+            "error"
+          );
+          loginFormEl.style.display = "block";
+          adminPanelEl.style.display = "none";
+          return;
+        }
+
+        const isPaid = data?.is_paid === true;
+
+        if (!isPaid) {
+          setStatus(
+            "Your subscription has expired or is inactive. Please renew your plan to continue accessing the admin panel.",
+            "error"
+          );
+          loginFormEl.style.display = "block";
+          adminPanelEl.style.display = "none";
+          return;
+        }
+
+        loginFormEl.style.display = "none";
+        adminPanelEl.style.display = "block";
+        setStatus(""); 
+        setAdminStatus("Signed in with an active subscription.", "success");
+      } catch (err) {
+        console.error(err);
+        setStatus(
+          "Unexpected error while checking subscription. Please refresh the page.",
+          "error"
+        );
+        loginFormEl.style.display = "block";
+        adminPanelEl.style.display = "none";
+      }
+    }
+
+    (async function initSession() {
+      try {
+        const {
+          data: { session },
+        } = await sb.auth.getSession();
+
+        if (session) {
+          await checkPaidAndShow(session);
+        } else {
+          loginFormEl.style.display = "block";
+          adminPanelEl.style.display = "none";
+        }
+      } catch (err) {
+        console.error("Init session error:", err);
+        loginFormEl.style.display = "block";
+        adminPanelEl.style.display = "none";
+      }
+    })();
+
+    async function signIn() {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        setStatus("Please enter both email and password.", "error");
+        return;
+      }
+
+      loginButton.disabled = true;
+      loginButton.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i><span>Signing in...</span>';
+      setStatus("");
+
+      try {
+        const { data, error } = await sb.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          setStatus(error.message || "Unable to sign in. Please try again.", "error");
+          return;
+        }
+
+        await checkPaidAndShow(data.session);
+      } catch (err) {
+        console.error("signIn error:", err);
+        setStatus("Unexpected error during sign in. Please try again.", "error");
+      } finally {
+        loginButton.disabled = false;
+        loginButton.innerHTML =
+          '<i class="fa-solid fa-right-to-bracket"></i><span>Sign in</span>';
+      }
+    }
+
     async function signOut() {
-      await supabase.auth.signOut();
-      document.getElementById('adminPanel').classList.add('hidden');
-      document.getElementById('loginForm').classList.remove('hidden');
+      try {
+        await sb.auth.signOut();
+      } catch (err) {
+        console.error("signOut error:", err);
+      }
+
+      loginFormEl.style.display = "block";
+      adminPanelEl.style.display = "none";
+      emailInput.value = "";
+      passwordInput.value = "";
+      setAdminStatus("");
+      setStatus("You have been signed out.", "success");
     }
   </script>
 </body>
