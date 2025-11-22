@@ -68,15 +68,15 @@
 
     .shell {
       width: 100%;
-      max-width: 960px;
+      max-width: 1100px;
       display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.15fr);
       gap: 28px;
       align-items: stretch;
       position: relative;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
       .shell {
         grid-template-columns: minmax(0, 1fr);
       }
@@ -550,6 +550,136 @@
       font-size: 13px;
     }
 
+    /* Branding section */
+    .branding-card {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.45);
+    }
+
+    .branding-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .branding-header h4 {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .branding-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 720px) {
+      .branding-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .branding-field {
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .branding-field label {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .branding-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .branding-preview {
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      padding: 10px 12px;
+      background: rgba(15, 23, 42, 0.85);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-height: 80px;
+    }
+
+    [data-theme="light"] .branding-preview {
+      background: #f9fafb;
+    }
+
+    .branding-preview-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .branding-preview-tagline {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .branding-color-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .branding-color-dot span {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.6);
+    }
+
+    .branding-save-btn {
+      margin-top: 6px;
+      width: 100%;
+      border-radius: 9px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-main);
+      padding: 7px 0;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    [data-theme="light"] .branding-save-btn {
+      background: #f9fafb;
+    }
+
+    .branding-save-btn:hover {
+      background: rgba(30, 64, 175, 0.7);
+      border-color: rgba(59, 130, 246, 0.8);
+    }
+
+    .branding-save-btn i {
+      font-size: 12px;
+    }
+
+    .branding-status {
+      margin-top: 6px;
+      font-size: 11px;
+      min-height: 14px;
+      color: var(--text-muted);
+    }
+
     /* Assistant mascot */
     .assistant-orbit {
       position: fixed;
@@ -784,9 +914,81 @@
             <span><i class="fa-solid fa-database"></i>&nbsp; Supabase backend</span>
           </div>
 
-          <p style="margin-bottom: 14px;">
-            This is a placeholder surface. Embed your existing admin dashboard
-            components here once auth is fully wired and tested.
+          <!-- BRANDING SECTION -->
+          <div class="branding-card">
+            <div class="branding-header">
+              <h4>Branding</h4>
+              <span class="branding-note">
+                Configure how ScopeBuilder looks for your agency.
+              </span>
+            </div>
+
+            <div class="branding-grid">
+              <div>
+                <div class="branding-field">
+                  <label for="brandTitle">Product / brand title</label>
+                  <input
+                    type="text"
+                    id="brandTitle"
+                    placeholder="e.g. ScopeBuilder for Acme Studio"
+                  />
+                </div>
+
+                <div class="branding-field">
+                  <label for="brandTagline">Tagline</label>
+                  <input
+                    type="text"
+                    id="brandTagline"
+                    placeholder="e.g. Clear scopes, faster approvals."
+                  />
+                </div>
+
+                <div class="branding-field">
+                  <label for="brandColor">Primary color (hex)</label>
+                  <input
+                    type="text"
+                    id="brandColor"
+                    placeholder="#4F46E5"
+                  />
+                </div>
+
+                <div class="branding-field">
+                  <label for="brandLogo">Logo URL (optional)</label>
+                  <input
+                    type="text"
+                    id="brandLogo"
+                    placeholder="https://..."
+                  />
+                </div>
+
+                <button type="button" class="branding-save-btn" id="brandingSaveBtn">
+                  <i class="fa-solid fa-floppy-disk"></i>
+                  <span>Save branding</span>
+                </button>
+                <div id="brandingStatus" class="branding-status"></div>
+              </div>
+
+              <div class="branding-preview">
+                <div class="branding-preview-title" id="brandingPreviewTitle">
+                  ScopeBuilder Admin
+                </div>
+                <div class="branding-preview-tagline" id="brandingPreviewTagline">
+                  Secure dashboard for managing client proposals and workspaces.
+                </div>
+                <div class="branding-color-dot" id="brandingPreviewColorRow">
+                  <span id="brandingPreviewColorDot" style="background:#4F46E5;"></span>
+                  <span id="brandingPreviewColorText">Primary color: #4F46E5</span>
+                </div>
+                <div class="branding-note" id="brandingPreviewLogoNote">
+                  Logo preview uses the SB mark; custom logos will appear in your live client view.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p style="margin-top: 16px; margin-bottom: 14px;">
+            Once templates and agencies are wired, this surface will hold all of your
+            workspace configuration in one place.
           </p>
 
           <button class="outline-btn" onclick="signOut()">
@@ -819,6 +1021,22 @@
     const loginFormEl = document.getElementById("loginForm");
     const adminPanelEl = document.getElementById("adminPanel");
     const loginButton = document.getElementById("loginButton");
+
+    // Branding elements
+    const brandTitleInput = document.getElementById("brandTitle");
+    const brandTaglineInput = document.getElementById("brandTagline");
+    const brandColorInput = document.getElementById("brandColor");
+    const brandLogoInput = document.getElementById("brandLogo");
+    const brandingSaveBtn = document.getElementById("brandingSaveBtn");
+    const brandingStatusEl = document.getElementById("brandingStatus");
+
+    const brandingPreviewTitle = document.getElementById("brandingPreviewTitle");
+    const brandingPreviewTagline = document.getElementById("brandingPreviewTagline");
+    const brandingPreviewColorDot = document.getElementById("brandingPreviewColorDot");
+    const brandingPreviewColorText = document.getElementById("brandingPreviewColorText");
+
+    let currentUserId = null;
+    let currentBrandingId = null;
 
     // Theme toggle
     const htmlEl = document.documentElement;
@@ -915,6 +1133,10 @@
       }
     }
 
+    function setBrandingStatus(message) {
+      brandingStatusEl.textContent = message || "";
+    }
+
     togglePassword.addEventListener("click", () => {
       const isPassword = passwordInput.getAttribute("type") === "password";
       passwordInput.setAttribute("type", isPassword ? "text" : "password");
@@ -929,6 +1151,127 @@
       );
     }
 
+    function updateBrandingPreview() {
+      const title = brandTitleInput.value.trim() || "ScopeBuilder Admin";
+      const tagline =
+        brandTaglineInput.value.trim() ||
+        "Secure dashboard for managing client proposals and workspaces.";
+      let color = brandColorInput.value.trim() || "#4F46E5";
+
+      if (!/^#?[0-9a-fA-F]{6}$/.test(color)) {
+        color = "#4F46E5";
+      }
+      if (color[0] !== "#") color = "#" + color.slice(0, 6);
+
+      brandingPreviewTitle.textContent = title;
+      brandingPreviewTagline.textContent = tagline;
+      brandingPreviewColorDot.style.background = color;
+      brandingPreviewColorText.textContent = "Primary color: " + color;
+    }
+
+    brandTitleInput.addEventListener("input", updateBrandingPreview);
+    brandTaglineInput.addEventListener("input", updateBrandingPreview);
+    brandColorInput.addEventListener("input", updateBrandingPreview);
+
+    async function loadBranding(userId) {
+      setBrandingStatus("Loading branding…");
+
+      try {
+        const { data, error } = await sb
+          .from("Branding")
+          .select("id, title, tagline, primary_color, logo_url")
+          .eq("user_id", userId)
+          .maybeSingle();
+
+        if (error) {
+          console.error("branding load error:", error);
+          setBrandingStatus("Unable to load branding right now.");
+          return;
+        }
+
+        if (!data) {
+          // no row yet: set some defaults in UI only
+          currentBrandingId = null;
+          brandTitleInput.value = "";
+          brandTaglineInput.value = "";
+          brandColorInput.value = "#4F46E5";
+          brandLogoInput.value = "";
+          updateBrandingPreview();
+          setBrandingStatus("No branding saved yet. Set it up and click Save.");
+          return;
+        }
+
+        currentBrandingId = data.id;
+        brandTitleInput.value = data.title || "";
+        brandTaglineInput.value = data.tagline || "";
+        brandColorInput.value = data.primary_color || "#4F46E5";
+        brandLogoInput.value = data.logo_url || "";
+        updateBrandingPreview();
+        setBrandingStatus("Branding loaded.");
+      } catch (err) {
+        console.error("branding load exception:", err);
+        setBrandingStatus("Unexpected error loading branding.");
+      }
+    }
+
+    async function saveBranding() {
+      if (!currentUserId) return;
+
+      setBrandingStatus("Saving…");
+      brandingSaveBtn.disabled = true;
+
+      let color = brandColorInput.value.trim() || "#4F46E5";
+      if (!/^#?[0-9a-fA-F]{6}$/.test(color)) {
+        color = "#4F46E5";
+      }
+      if (color[0] !== "#") color = "#" + color.slice(0, 6);
+
+      const payload = {
+        user_id: currentUserId,
+        title: brandTitleInput.value.trim() || null,
+        tagline: brandTaglineInput.value.trim() || null,
+        primary_color: color,
+        logo_url: brandLogoInput.value.trim() || null,
+      };
+
+      try {
+        let result;
+
+        if (currentBrandingId) {
+          result = await sb
+            .from("Branding")
+            .update(payload)
+            .eq("id", currentBrandingId)
+            .select("id")
+            .maybeSingle();
+        } else {
+          result = await sb
+            .from("Branding")
+            .insert(payload)
+            .select("id")
+            .maybeSingle();
+        }
+
+        const { data, error } = result;
+
+        if (error) {
+          console.error("branding save error:", error);
+          setBrandingStatus("Could not save branding. Please try again.");
+        } else {
+          currentBrandingId = data?.id || currentBrandingId;
+          setBrandingStatus("Branding saved.");
+          updateBrandingPreview();
+        }
+      } catch (err) {
+        console.error("branding save exception:", err);
+        setBrandingStatus("Unexpected error while saving branding.");
+      } finally {
+        brandingSaveBtn.disabled = false;
+      }
+    }
+
+    brandingSaveBtn.addEventListener("click", saveBranding);
+
     async function checkPaidAndShow(session) {
       try {
         const userId = session?.user?.id;
@@ -938,6 +1281,8 @@
           adminPanelEl.style.display = "none";
           return;
         }
+
+        currentUserId = userId;
 
         const { data, error } = await sb
           .from("Users")
@@ -972,6 +1317,9 @@
         adminPanelEl.style.display = "block";
         setStatus("");
         setAdminStatus("Signed in with an active subscription.", "success");
+
+        // Load branding for this user
+        await loadBranding(userId);
       } catch (err) {
         console.error(err);
         setStatus(
@@ -1049,7 +1397,10 @@
       adminPanelEl.style.display = "none";
       emailInput.value = "";
       passwordInput.value = "";
+      currentUserId = null;
+      currentBrandingId = null;
       setAdminStatus("");
+      setBrandingStatus("");
       setStatus("You have been signed out.", "success");
     }
   </script>
