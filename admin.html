@@ -30,7 +30,6 @@
       --radius-full: 999px;
     }
 
-    /* Light theme override */
     [data-theme="light"] {
       --bg: #f3f4f6;
       --card-bg: #ffffff;
@@ -570,7 +569,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      animation: assistant-fly 17s ease-in-out infinite;
+      animation: assistant-fly 9s ease-in-out infinite;
     }
 
     .assistant-mask {
@@ -618,22 +617,25 @@
 
     @keyframes assistant-fly {
       0% {
-        transform: translate(8%, 12%) translate3d(0, 0, 0);
+        transform: translate(5vw, 8vh) translate3d(0, 0, 0);
       }
-      20% {
-        transform: translate(72%, 18%) translate3d(0, -8px, 0);
+      15% {
+        transform: translate(85vw, 10vh) translate3d(0, -6px, 0);
       }
-      40% {
-        transform: translate(80%, 76%) translate3d(0, 6px, 0);
+      30% {
+        transform: translate(92vw, 80vh) translate3d(0, 4px, 0);
+      }
+      45% {
+        transform: translate(10vw, 88vh) translate3d(0, -4px, 0);
       }
       60% {
-        transform: translate(12%, 82%) translate3d(0, -4px, 0);
+        transform: translate(50vw, 15vh) translate3d(0, 6px, 0);
       }
-      80% {
-        transform: translate(18%, 32%) translate3d(0, 8px, 0);
+      75% {
+        transform: translate(80vw, 50vh) translate3d(0, -6px, 0);
       }
       100% {
-        transform: translate(8%, 12%) translate3d(0, 0, 0);
+        transform: translate(5vw, 8vh) translate3d(0, 0, 0);
       }
     }
   </style>
@@ -938,7 +940,7 @@
         }
 
         const { data, error } = await sb
-          .from("users")
+          .from("Users")
           .select("is_paid")
           .eq("id", userId)
           .maybeSingle();
